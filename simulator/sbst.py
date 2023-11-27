@@ -3,6 +3,7 @@ import random
 import argparse
 import ast
 import os
+from machine import UserInteract
 
 class codeNodes:
     def __init__(self):
@@ -144,7 +145,6 @@ class Evaluator:
 
     def fill_user_interactions(self, codons: list):
         interactions = [self.get_phenotype(codon) for codon in codons]
-        # print(interactions)
         idx = 0  # idx of interactions
         new_lines = []
         start_insert = False
@@ -158,7 +158,7 @@ class Evaluator:
                     indentation = line[:len(line) - len(line.lstrip())]
                     new_lines.append(indentation + interactions[idx] + '\n')
                     idx += 1
-            elif line.strip().startswith("while True"):
+            elif line.strip().startswith("if True"):
                 start_insert = True
             new_lines.append(line + '\n')
         last_line = lines[-1]
@@ -168,6 +168,8 @@ class Evaluator:
 
     def evaluate(self, codons):
         new_code = self.fill_user_interactions(codons)
+        print("codon: ", codons)
+        print("code: ", new_code)
         exec(new_code, globals())
         fitness = al + (1 - 1.001 ** (-bd))
         return fitness
@@ -219,9 +221,10 @@ def select(k, population):
 
 def ga(space_number, evaluator):
     population = []
-    MAX_NUM = 500  # TODO: 최대값 정하기
+    MAX_NUM = 2  # TODO: 최대값 정하기
     for i in range(100):
         s = Solution(random_codons(space_number, (0, MAX_NUM)))
+        print("solution: ", s)
         s.fitness = evaluator.evaluate(s.sol)
         population.append(s)
     count = 0
@@ -462,7 +465,7 @@ def testor(l_info, r_info, node_idx):
 def erase_sleep(code):
     lines = []
     for line in code.split("\n"):
-        if line.strip().startswith("utime.sleep"):
+        if line == "import utime" or line.strip().startswith("utime.sleep"):
             continue
         else:
             lines.append(line)
@@ -499,34 +502,65 @@ if __name__ == "__main__":
 
     with open(args.target, "r") as f:
         code = f.read()
+    
     code = erase_sleep(code)  # sleep하는 코드 지우기
     space_number = count_space(code)  # codons의 길이 계산
     tree = ast.parse(code)
 
-    # print(ast.dump(tree, indent=4))
-    # print("============")
+    # 가능한 user interaction 가져오기
+    interactor = UserInteract()
+    user_interactions = interactor.codes
+    interaction_count = len(user_interactions)
 
-    '''
-    Connect Hardware
-    '''
-    buttons = ["b1"]
-    # sensors = ["s1", "s2", "s3"]
-    g_parser = grammar.GrammarParser(buttons=buttons)
+    print("============")
+    
+    n_interaction = space_number
 
     '''
     Get targets & Testcase generation for each target with GA
     '''
+
+    for index, body in enumerate(tree.body):
+        if isinstance(body, ast.Import) or isinstance(body, ast.ImportFrom):
+            continue
+        else:
+            break
+    
+    tree.body.insert(index, ast.ImportFrom(module='machine', names=[ast.alias(name='UserInteract')], level=0))
+    interactor_node = ast.Assign(
+                        targets=[
+                            ast.Name(id='interactor', ctx=ast.Store())],
+                        value=ast.Call(
+                            func=ast.Name(id='UserInteract', ctx=ast.Load()),
+                            args=[],
+                            keywords=[])
+                        )
+    ast.fix_missing_locations(interactor_node)
+    tree.body.insert(index+1, interactor_node)
+
     for body in tree.body:
         if isinstance(body, ast.While):  # loop()
-            # print(ast.dump(body, indent=4))
+            # change to 'if True:'
+            new_if_node = ast.If(
+                test=ast.Constant(value=True),
+                body=body.body,
+                orelse=[]
+            )
+            ast.copy_location(new_if_node, body)
+            ast.fix_missing_locations(new_if_node)
+
+            # 루프를 if 문으로 대체
+            index = tree.body.index(body)
+            tree.body[index] = new_if_node
+
             nodes = codeNodes()
             new_bodies = []
             for i, el in enumerate(body.body):
                 new_bodies.append(nodes.travel_and_update(el, [], []))
-            body.body = new_bodies # while문의 body에 다시 넣어주기
+            body.body = new_bodies # if문의 body에 다시 넣어주기
             unparse_content = ast.unparse(tree)
-            # print(unparse_content)
-            # print(f"nodes.infos: {nodes.infos}")
+
+            print(f"nodes.infos: {nodes.infos}")
             for idx, (target_ids, target_types) in enumerate(nodes.infos):
                 al = 1000
                 bd = 1000
@@ -535,14 +569,18 @@ target_ids = {target_ids}
 target_types = {target_types}
 '''
                 test_content += unparse_content
-                # print(test_content)
 
-                evaluator = Evaluator(test_content, g_parser.productions)
-                # temp_code = evaluator.fill_user_interactions([4,6,7,9,0,2])
-                # print(temp_code)
-                # print(ast.unparse(temp_code))
+                evaluator = Evaluator(test_content, [f"interactor.interact({num})" for num in range(interaction_count)])
+                # evaluator = Evaluator(test_content, grammar.GrammarParser(buttons=["b1"]).productions)
+                
+                # x_interaction = random.choices(range(interaction_count), k=n_interaction)
+                # print("x_interaction: ", x_interaction)
+                # temp_code = evaluator.fill_user_interactions(x_interaction)
+                # temp_tree = ast.parse(temp_code)
+                # print("temp code: ", ast.unparse(temp_tree))
+
                 result = ga(space_number, evaluator)
-                print(result)
+                print("result: ", result, "done.")
 
             break
 
