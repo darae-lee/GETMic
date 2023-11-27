@@ -1,3 +1,4 @@
+import random
 INPUT = 0
 OUTPUT = 1
 NON_SET = 2
@@ -43,8 +44,13 @@ class Board:
         self.gnd.state = -1
         self.vcc = HWPin("vcc")
         self.vcc.state = 1
-        self.codes = [0]
-        
+        self.grammar = []
+        wait_expr = "do_nothing"
+        self.grammar.append(wait_expr)
+    
+    def updategrammar(self, expressions):
+        self.grammar.extend(expressions)
+    
     def __str__(self) -> str:
         return "board"
     
@@ -53,16 +59,21 @@ class Board:
 
     def digitalread(self, pin: int):
         return self.pins[pin].state
+
+    def analogread(self, pin: int):
+        return self.pins[pin].state
     
     def digitalwirte(self, pin: int, value: int):
         self.pins[pin].state = value
         self.updatecircuit()
         
     def userinteraction(self, code: int):
+        code = code % len(self.grammar)
         if code != 0:
             # 0 for idle
+            # print("call", code, self.grammar)
             print(code)
-            self.codes[code]()
+            self.grammar[code]()
         self.updatecircuit()
 
     def updatecircuit(self):
@@ -121,8 +132,13 @@ class Button(Component):
     def __init__(self, left, right, board):
         super().__init__(left, right) 
         # if you push it, the state becomes high
-        board.codes.append(self.press)
-        board.codes.append(self.unpress)
+        self.board = board
+        self.updategrammar()
+
+    def updategrammar(self):
+        # self is a button, press and unpress in the relavent actions
+        btn_combinations = [self.press, self.unpress]
+        self.board.updategrammar(btn_combinations)
         # if push, high / unpush, low
     
     def press(self):
@@ -134,21 +150,35 @@ class Button(Component):
     def __str__(self) -> str:
         return "BTN with right {}".format(self.right)
 
-# class TemperatureSensor:
-#     def __init__(self) -> None:
-#         self.left
-#         self.right
-#     pass   
-# class Potentialmeter:
-#     def __init__(self) -> None:
-#         self.left
-#         self.right
-#     pass   
-# class Photoresistor:
-#     def __init__(self) -> None:
-#         self.left
-#         self.right
-#     pass    
+
+class AnalogComponent(Component):
+    # analog input sensor
+    def __init__(self, left, right, board):
+        super().__init__(left, right) 
+        # if you push it, the state becomes high
+        self.board = board
+        self.max_value = 1024
+        self.state = random.randrange(0, self.max_value)
+        self.updategrammar()
+
+    def updategrammar(self):
+        temp_combinations = [lambda x=value: self.setvalue(x) for value in range(self.max_value)]
+        self.board.updategrammar(temp_combinations)
+    
+    def setvalue(self, value):
+        self.state = value # update internal state
+
+class TemperatureSensor(AnalogComponent):
+    def __str__(self):
+        return "Temperature sensor with right {}".format(self.right)
+    
+class Potentialmeter(AnalogComponent):
+    def __str__(self) -> str:
+        return "Potentialmeter sensor with right {}".format(self.right)
+
+class Photoresistor(AnalogComponent):
+    def __str__(self) -> str:
+        return "Photoresistor sensor with right {}".format(self.right)
 
 if __name__ == '__main__':
     print("currently assume one led with button, two pin in board")
@@ -164,7 +194,7 @@ if __name__ == '__main__':
     board.pinmode(btn_right, INPUT)
     read_val = board.digitalread(btn_right)
     print(read_val)
-    print(board.codes)
+    print(board.grammar)
     print("press!!")
     board.userinteraction(0)
     print(board.digitalread(btn_right))
