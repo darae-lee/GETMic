@@ -1,6 +1,8 @@
+import machine
 from machine import Pin
 from machine import UserInteract
 
+machine.load_board(__file__)
 buttonPin = 2
 ledPin = 13
 buttonState = 0
