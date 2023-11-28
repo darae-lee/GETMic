@@ -3,11 +3,13 @@ import random
 import argparse
 import ast
 import os
-from machine import UserInteract
 
 class codeNodes:
     def __init__(self):
-        self.infos = []
+        self.target_ids = []
+        self.target_types = []
+        self.infos = [] #(target_ids, target_types)
+        self.values = [] #(al, bd)
 
     def travel_and_update(self, node, prev_ids, prev_types):
         my_idx = id(node)
@@ -128,6 +130,9 @@ class codeNodes:
                 info = (prev_ids, prev_types)
                 if info not in self.infos and len(prev_ids) != 0:
                     self.infos.append(info)
+                    self.target_ids.append(info[0])
+                    self.target_types.append(info[1])
+                    self.values.append([1000,1000])
         return node
 
 '''
@@ -135,10 +140,13 @@ for GA
 '''
 
 class Evaluator:
-    def __init__(self, test_content, productions):
-        self.test_content = test_content
+    def __init__(self, setup_content, loop_content, productions, loop_count, local_count):
+        self.setup_content = setup_content
+        self.loop_content = loop_content
         self.productions = productions
         self.productions_length = len(productions)
+        self.loop_count = loop_count
+        self.local_count = local_count
 
     def get_phenotype(self, codon: int) -> str:
         return self.productions[codon % self.productions_length]
@@ -147,19 +155,19 @@ class Evaluator:
         interactions = [self.get_phenotype(codon) for codon in codons]
         idx = 0  # idx of interactions
         new_lines = []
-        start_insert = False
-        lines = self.test_content.split("\n")
+        # start_insert = False
+        lines = self.loop_content.split("\n")
         for line in lines:
-            if start_insert:
-                if line.strip().startswith("else") or line.strip().startswith("elif"):
-                    new_lines.append(indentation + interactions[idx] + '\n')
-                    idx += 1
-                else:
-                    indentation = line[:len(line) - len(line.lstrip())]
-                    new_lines.append(indentation + interactions[idx] + '\n')
-                    idx += 1
-            elif line.strip().startswith("if True"):
-                start_insert = True
+            # if start_insert:
+            if line.strip().startswith("else") or line.strip().startswith("elif"):
+                new_lines.append(indentation + interactions[idx] + '\n')
+                idx += 1
+            else:
+                indentation = line[:len(line) - len(line.lstrip())]
+                new_lines.append(indentation + interactions[idx] + '\n')
+                idx += 1
+            # elif line.strip().startswith("if True"):
+            #     start_insert = True
             new_lines.append(line + '\n')
         last_line = lines[-1]
         indentation = last_line[:len(last_line) - len(last_line.lstrip())]
@@ -167,12 +175,22 @@ class Evaluator:
         return "".join(new_lines)
 
     def evaluate(self, codons):
-        new_code = self.fill_user_interactions(codons)
-        print("codon: ", codons)
-        print("code: ", new_code)
-        exec(new_code, globals())
-        fitness = al + (1 - 1.001 ** (-bd))
-        return fitness
+        exec(self.setup_content, globals())
+
+        fitness = [float('inf')] * target_cnt
+        for loop_idx in range(self.loop_count):
+            local_codons = codons[loop_idx*self.local_count : (loop_idx+1)*self.local_count]
+            local_code = self.fill_user_interactions(local_codons)
+            
+            exec(local_code, globals())
+
+            for index, f in enumerate(values):
+                al, bd = f[0], f[1]
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+
+        return sum(fitness)
 
 
 class Solution:
@@ -219,12 +237,11 @@ def select(k, population):
     return sorted(participants, key=lambda x: x.fitness, reverse=False)[0]
 
 
-def ga(space_number, evaluator):
+def ga(loop_number, space_number, evaluator):
     population = []
-    MAX_NUM = 2  # TODO: 최대값 정하기
+    MAX_NUM = 2048  # TODO: 최대값 정하기
     for i in range(100):
-        s = Solution(random_codons(space_number, (0, MAX_NUM)))
-        print("solution: ", s)
+        s = Solution(random_codons(loop_number*space_number, (0, MAX_NUM)))
         s.fitness = evaluator.evaluate(s.sol)
         population.append(s)
     count = 0
@@ -263,203 +280,151 @@ branch condition functions
 k = 1
 
 def testeq(l, r, node_idx, ret_bd=False):
-    global al
-    if not ret_bd:
-        global bd
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        al = len(target_ids) - cur_pos - 1
-        if direction == 0:
-            bd = abs(l - r)
-        else:
-            bd = -abs(l - r)
-        if ret_bd:
-            return l == r, bd
-        else:
-            return l == r
-    else:
-        if ret_bd:
-            return l == r, 0
-        else:
-            return l == r
-
+    global values
+    for index in range(target_cnt):
+        al, bd = values[index]
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            al = len(target_ids[index]) - cur_pos - 1
+            values[index][0] = al
+            if direction == 0:
+                bd = abs(l - r)
+            else:
+                bd = -abs(l - r)
+        values[index][1] = bd
+    return l == r
 
 def testin(l, r, node_idx, ret_bd=False):
-    global al
-    if not ret_bd:
-        global bd
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        al = len(target_ids) - cur_pos - 1
-        dists = [abs(l - ref) for ref in r]
-        if direction == 0:
-            bd = min(dists)
-        else:
-            bd = -min(dists)
-        if ret_bd:
-            return l in r, bd
-        else:
-            return l in r
-    else:
-        if ret_bd:
-            return l in r, 0
-        else:
-            return l in r
-
+    global values
+    for index in range(target_cnt):
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            al = len(target_ids[index]) - cur_pos - 1
+            values[index][0] = al
+            dists = [abs(l - ref) for ref in r]
+            if direction == 0:
+                bd = min(dists)
+            else:
+                bd = -min(dists)
+        values[index][1] = bd
+    return l in r
 
 def testne(l, r, node_idx, ret_bd=False):
-    global al
-    if not ret_bd:
-        global bd
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        al = len(target_ids) - cur_pos - 1
-        if direction == 0:
-            bd = -abs(l - r)
-        else:
-            bd = abs(l - r)
-        if ret_bd:
-            return l != r, bd
-        else:
-            return l != r
-    else:
-        if ret_bd:
-            return l != r, 0
-        else:
-            return l != r
-
+    global values
+    for index in range(target_cnt):
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            al = len(target_ids[index]) - cur_pos - 1
+            values[index][0] = al
+            if direction == 0:
+                bd = -abs(l - r)
+            else:
+                bd = abs(l - r)
+        values[index][1] = bd
+    return l != r
 
 def testgte(l, r, node_idx, ret_bd=False):
-    global al
-    if not ret_bd:
-        global bd
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        al = len(target_ids) - cur_pos - 1
-        if direction == 0:
-            bd = r - l + k
-        else:
-            bd = l - r + k
-        if ret_bd:
-            return l >= r, bd
-        else:
-            return l >= r
-    else:
-        if ret_bd:
-            return l >= r, 0
-        else:
-            return l >= r
-
+    global values
+    for index in range(target_cnt):
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            al = len(target_ids[index]) - cur_pos - 1
+            values[index][0] = al
+            if direction == 0:
+                bd = r - l + k
+            else:
+                bd = l - r + k
+        values[index][1] = bd
+    return l >= r
 
 def testlte(l, r, node_idx, ret_bd=False):
-    global al
-    if not ret_bd:
-        global bd
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        al = len(target_ids) - cur_pos - 1
-        if direction == 0:
-            bd = l - r + k
-        else:
-            bd = r - l + k
-        if ret_bd:
-            return l <= r, bd
-        else:
-            return l <= r
-    else:
-        if ret_bd:
-            return l <= r, 0
-        else:
-            return l <= r
-
+    global values
+    for index in range(target_cnt):
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            al = len(target_ids[index]) - cur_pos - 1
+            values[index][0] = al
+            if direction == 0:
+                bd = l - r + k
+            else:
+                bd = r - l + k
+        values[index][1] = bd
+    return l <= r
 
 def testgt(l, r, node_idx, ret_bd=False):
-    global al
-    if not ret_bd:
-        global bd
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        al = len(target_ids) - cur_pos - 1
-        if direction == 0:
-            bd = r - l + k
-        else:
-            bd = l - r + k
-        if ret_bd:
-            return l > r, bd
-        else:
-            return l > r
-    else:
-        if ret_bd:
-            return l > r, 0
-        else:
-            return l > r
-
+    global values
+    for index in range(target_cnt):
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            al = len(target_ids[index]) - cur_pos - 1
+            values[index][0] = al
+            if direction == 0:
+                bd = r - l + k
+            else:
+                bd = l - r + k
+        values[index][1] = bd
+    return l > r
 
 def testlt(l, r, node_idx, ret_bd=False):
-    global al
-    if not ret_bd:
-        global bd
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        al = len(target_ids) - cur_pos - 1
-        if direction == 0:
-            bd = l - r + k
-        else:
-            bd = r - l + k
-        if ret_bd:
-            return l < r, bd
-        else:
-            return l < r
-    else:
-        if ret_bd:
-            return l < r, 0
-        else:
-            return l < r
-
+    global values
+    for index in range(target_cnt):
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            al = len(target_ids[index]) - cur_pos - 1
+            values[index][0] = al
+            if direction == 0:
+                bd = l - r + k
+            else:
+                bd = r - l + k
+        values[index][1] = bd
+    return l < r
 
 def testand(l_info, r_info, node_idx):
-    global bd
-    l, l_bd = l_info
-    r, r_bd = r_info
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        if direction == 0:
-            # should be all true
-            bd = max(l_bd, 0) + max(r_bd, 0)
-            # max(l_bd, r_bd)
+    global values
+    for index in range(target_cnt):
+        l, l_bd = l_info
+        r, r_bd = r_info
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            if direction == 0:
+                # should be all true
+                bd = max(l_bd, 0) + max(r_bd, 0)
+                # max(l_bd, r_bd)
+            else:
+                # at least one false
+                bd = min(l_bd, r_bd)
+            values[index][1] = bd
+            return l and r
         else:
-            # at least one false
-            bd = min(l_bd, r_bd)
-        return l and r
-    else:
-        return l and r
-
+            return l and r
 
 def testor(l_info, r_info, node_idx):
-    global bd
-    l, l_bd = l_info
-    r, r_bd = r_info
-    if node_idx in target_ids:
-        cur_pos = target_ids.index(node_idx)
-        direction = target_types[cur_pos]
-        if direction == 0:
-            # should be at least one true
-            bd = min(l_bd, r_bd)
-            # max(l_bd, r_bd)
+    global values
+    for index in range(target_cnt):
+        l, l_bd = l_info
+        r, r_bd = r_info
+        if node_idx in target_ids[index]:
+            cur_pos = target_ids[index].index(node_idx)
+            direction = target_types[index][cur_pos]
+            if direction == 0:
+                # should be at least one true
+                bd = min(l_bd, r_bd)
+                # max(l_bd, r_bd)
+            else:
+                # should be all false
+                bd = max(l_bd, 0) + max(r_bd, 0)
+            values[index][1] = bd
+            return l or r
         else:
-            # should be all false
-            bd = max(l_bd, 0) + max(r_bd, 0)
-        return l or r
-    else:
-        return l or r
+            return l or r
 
 
 def erase_sleep(code):
@@ -491,9 +456,9 @@ def count_space(code):
     space_count += 1
     return space_count
 
-
 # usage: python sbst.py target_codes/{}.py
 if __name__ == "__main__":
+    global values
     global al, bd
     random.seed(0)
     parser = argparse.ArgumentParser()
@@ -507,26 +472,33 @@ if __name__ == "__main__":
     space_number = count_space(code)  # codons의 길이 계산
     tree = ast.parse(code)
 
-    # 가능한 user interaction 가져오기
-    interactor = UserInteract()
-    user_interactions = interactor.codes
-    interaction_count = len(user_interactions)
-
-    print("============")
-    
-    n_interaction = space_number
-
     '''
     Get targets & Testcase generation for each target with GA
     '''
 
-    for index, body in enumerate(tree.body):
-        if isinstance(body, ast.Import) or isinstance(body, ast.ImportFrom):
-            continue
+    # setup, loop 분리
+    initial_tree = ast.parse("")
+    setup_tree = ast.parse("")
+    loop_tree = ast.parse("")
+
+    for index, node in enumerate(tree.body):
+        if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
+            initial_tree.body.append(node)
         else:
             break
     
-    tree.body.insert(index, ast.ImportFrom(module='machine', names=[ast.alias(name='UserInteract')], level=0))
+    initial_tree.body.append(ast.Import(names=[ast.alias(name='machine')]))
+    initial_tree.body.append(ast.ImportFrom(module='machine', names=[ast.alias(name='UserInteract')], level=0))
+    load_board_node = ast.Expr(
+                        value=ast.Call(
+                            func=ast.Attribute(
+                                value=ast.Name(id='machine', ctx=ast.Load()),
+                                attr='load_board',
+                                ctx=ast.Load()),
+                            args=[
+                                ast.Name(id="\""+args.target+"\"", ctx=ast.Load())],
+                            keywords=[]))
+    
     interactor_node = ast.Assign(
                         targets=[
                             ast.Name(id='interactor', ctx=ast.Store())],
@@ -535,52 +507,70 @@ if __name__ == "__main__":
                             args=[],
                             keywords=[])
                         )
+    ast.fix_missing_locations(load_board_node)
+    initial_tree.body.append(load_board_node)
     ast.fix_missing_locations(interactor_node)
-    tree.body.insert(index+1, interactor_node)
+    initial_tree.body.append(interactor_node)
 
-    for body in tree.body:
-        if isinstance(body, ast.While):  # loop()
-            # change to 'if True:'
-            new_if_node = ast.If(
-                test=ast.Constant(value=True),
-                body=body.body,
-                orelse=[]
-            )
-            ast.copy_location(new_if_node, body)
-            ast.fix_missing_locations(new_if_node)
-
-            # 루프를 if 문으로 대체
-            index = tree.body.index(body)
-            tree.body[index] = new_if_node
-
-            nodes = codeNodes()
-            new_bodies = []
-            for i, el in enumerate(body.body):
-                new_bodies.append(nodes.travel_and_update(el, [], []))
-            body.body = new_bodies # if문의 body에 다시 넣어주기
-            unparse_content = ast.unparse(tree)
-
-            print(f"nodes.infos: {nodes.infos}")
-            for idx, (target_ids, target_types) in enumerate(nodes.infos):
-                al = 1000
-                bd = 1000
-                test_content = f'''
-target_ids = {target_ids}
-target_types = {target_types}
-'''
-                test_content += unparse_content
-
-                evaluator = Evaluator(test_content, [f"interactor.interact({num})" for num in range(interaction_count)])
-                # evaluator = Evaluator(test_content, grammar.GrammarParser(buttons=["b1"]).productions)
-                
-                # x_interaction = random.choices(range(interaction_count), k=n_interaction)
-                # print("x_interaction: ", x_interaction)
-                # temp_code = evaluator.fill_user_interactions(x_interaction)
-                # temp_tree = ast.parse(temp_code)
-                # print("temp code: ", ast.unparse(temp_tree))
-
-                result = ga(space_number, evaluator)
-                print("result: ", result, "done.")
-
+    for index2, node in enumerate(tree.body[index:]):
+        if isinstance(node, ast.While):
             break
+        ast.copy_location(node, setup_tree)
+        setup_tree.body.append(node)
 
+    for _, node in enumerate(tree.body[index+index2:]):
+        nodes = codeNodes()
+        new_bodies = []
+        for i, el in enumerate(node.body):
+            new_bodies.append(nodes.travel_and_update(el, [], []))
+        node.body = new_bodies # if문의 body에 다시 넣어주기
+        # unparse_content = ast.unparse(tree)
+        for inner_node in node.body:
+            ast.copy_location(inner_node, loop_tree)
+            loop_tree.body.append(inner_node)
+
+    print(f"nodes.infos: {nodes.infos}")
+    print(f"nodes.target_ids: {nodes.target_ids}")
+    print(f"nodes.target_types: {nodes.target_types}")
+    print(f"nodes.values: {nodes.values}")
+    values = nodes.values # list of [al, bd]
+
+    setup_content = f'''
+target_cnt = {len(nodes.target_ids)}
+target_ids = {nodes.target_ids}
+target_types = {nodes.target_types}
+'''
+    setup_content += ast.unparse(setup_tree)
+
+    initial_content = ast.unparse(initial_tree)
+    loop_content = ast.unparse(loop_tree)
+
+    #
+    exec(initial_content, globals())
+
+    exec(setup_content, globals())
+
+    # 가능한 user interaction 가져오기
+    user_interactions = interactor.codes
+    interaction_cnt = len(user_interactions)
+    productions = [f"interactor.interact({num})" for num in range(interaction_cnt)]
+    loop_count = 3
+    print("user interaction cnt: ", interaction_cnt)
+    print("------------")
+    print("setup content: ", setup_content)
+    print("------------")
+    print("loop content: ", ast.unparse(loop_tree))
+    print("------------")
+    print("productions: ", productions)
+    print("============")
+
+    evaluator = Evaluator(
+                    setup_content=setup_content,
+                    loop_content=loop_content,
+                    productions=productions,
+                    loop_count=loop_count, # loop 몇 번 돌건지
+                    local_count=space_number, # local action 개수
+    )
+    
+    result = ga(loop_count, space_number, evaluator)
+    print("result: ", result, "done.")
