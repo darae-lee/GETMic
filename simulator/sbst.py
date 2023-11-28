@@ -281,6 +281,8 @@ k = 1
 
 def testeq(l, r, node_idx, ret_bd=False):
     global values
+    if not ret_bd:
+        bds = [0] * target_cnt
     for index in range(target_cnt):
         al, bd = values[index]
         if node_idx in target_ids[index]:
@@ -292,11 +294,21 @@ def testeq(l, r, node_idx, ret_bd=False):
                 bd = abs(l - r)
             else:
                 bd = -abs(l - r)
-        values[index][1] = bd
-    return l == r
+            if ret_bd:
+                bds[index] = bd
+            else:
+                values[index][1] = bd
+        else:
+            values[index][1] = bd
+    if ret_bd:
+        return l == r
+    else:
+        return l == r, bds
 
 def testin(l, r, node_idx, ret_bd=False):
     global values
+    if not ret_bd:
+        bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -308,11 +320,21 @@ def testin(l, r, node_idx, ret_bd=False):
                 bd = min(dists)
             else:
                 bd = -min(dists)
-        values[index][1] = bd
-    return l in r
+            if ret_bd:
+                bds[index] = bd
+            else:
+                values[index][1] = bd
+        else:
+            values[index][1] = bd
+    if ret_bd:
+        return l in r
+    else:
+        return l in r, bds
 
 def testne(l, r, node_idx, ret_bd=False):
     global values
+    if not ret_bd:
+        bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -323,11 +345,21 @@ def testne(l, r, node_idx, ret_bd=False):
                 bd = -abs(l - r)
             else:
                 bd = abs(l - r)
-        values[index][1] = bd
-    return l != r
+            if ret_bd:
+                bds[index] = bd
+            else:
+                values[index][1] = bd
+        else:
+            values[index][1] = bd
+    if ret_bd:
+        return l != r
+    else:
+        return l != r, bds
 
 def testgte(l, r, node_idx, ret_bd=False):
     global values
+    if not ret_bd:
+        bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -338,11 +370,21 @@ def testgte(l, r, node_idx, ret_bd=False):
                 bd = r - l + k
             else:
                 bd = l - r + k
-        values[index][1] = bd
-    return l >= r
+            if ret_bd:
+                bds[index] = bd
+            else:
+                values[index][1] = bd
+        else:
+            values[index][1] = bd
+    if ret_bd:
+        return l >= r
+    else:
+        return l >= r, bds
 
 def testlte(l, r, node_idx, ret_bd=False):
     global values
+    if not ret_bd:
+        bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -353,11 +395,21 @@ def testlte(l, r, node_idx, ret_bd=False):
                 bd = l - r + k
             else:
                 bd = r - l + k
-        values[index][1] = bd
-    return l <= r
+            if ret_bd:
+                bds[index] = bd
+            else:
+                values[index][1] = bd
+        else:
+            values[index][1] = bd
+    if ret_bd:
+        return l <= r
+    else:
+        return l <= r, bds
 
 def testgt(l, r, node_idx, ret_bd=False):
     global values
+    if not ret_bd:
+        bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -368,11 +420,21 @@ def testgt(l, r, node_idx, ret_bd=False):
                 bd = r - l + k
             else:
                 bd = l - r + k
-        values[index][1] = bd
-    return l > r
+            if ret_bd:
+                bds[index] = bd
+            else:
+                values[index][1] = bd
+        else:
+            values[index][1] = bd
+    if ret_bd:
+        return l > r
+    else:
+        return l > r, bds
 
 def testlt(l, r, node_idx, ret_bd=False):
     global values
+    if not ret_bd:
+        bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -383,24 +445,32 @@ def testlt(l, r, node_idx, ret_bd=False):
                 bd = l - r + k
             else:
                 bd = r - l + k
-        values[index][1] = bd
-    return l < r
+            if ret_bd:
+                bds[index] = bd
+            else:
+                values[index][1] = bd
+        else:
+            values[index][1] = bd
+    if ret_bd:
+        return l < r
+    else:
+        return l < r, bds
 
 def testand(l_info, r_info, node_idx):
     global values
+    l, l_bds = l_info
+    r, r_bds = r_info
     for index in range(target_cnt):
-        l, l_bd = l_info
-        r, r_bd = r_info
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             if direction == 0:
                 # should be all true
-                bd = max(l_bd, 0) + max(r_bd, 0)
+                bd = max(l_bds[index], 0) + max(r_bds[index], 0)
                 # max(l_bd, r_bd)
             else:
                 # at least one false
-                bd = min(l_bd, r_bd)
+                bd = min(l_bds[index], r_bds[index])
             values[index][1] = bd
             return l and r
         else:
@@ -408,19 +478,19 @@ def testand(l_info, r_info, node_idx):
 
 def testor(l_info, r_info, node_idx):
     global values
+    l, l_bds = l_info
+    r, r_bds = r_info
     for index in range(target_cnt):
-        l, l_bd = l_info
-        r, r_bd = r_info
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             if direction == 0:
                 # should be at least one true
-                bd = min(l_bd, r_bd)
+                bd = min(l_bds[index], r_bds[index])
                 # max(l_bd, r_bd)
             else:
                 # should be all false
-                bd = max(l_bd, 0) + max(r_bd, 0)
+                bd = max(l_bds[index], 0) + max(r_bds[index], 0)
             values[index][1] = bd
             return l or r
         else:
@@ -554,7 +624,7 @@ target_types = {nodes.target_types}
     user_interactions = interactor.codes
     interaction_cnt = len(user_interactions)
     productions = [f"interactor.interact({num})" for num in range(interaction_cnt)]
-    loop_count = 3
+    loop_count = 5
     print("user interaction cnt: ", interaction_cnt)
     print("------------")
     print("setup content: ", setup_content)
