@@ -1,4 +1,6 @@
 import simulator
+import utime
+import threading
 
 HW_board = simulator.Board(n=14)
 
@@ -25,11 +27,17 @@ def load_board(path_name):
         photo = simulator.Photoresistor(HW_board.gnd, HW_board.pins[0], HW_board)
 
 
-class UserInteract:
-    def __init__(self):
-        self.codes = HW_board.grammar
-    def interact(self, code):
-        HW_board.userinteraction(code)
+class UserInteract(threading.Thread):
+    def __init__(self, seq):
+        threading.Thread.__init__(self)
+        self.seq = seq
+    def run(self):
+        for o, a in self.seq:
+            self.interact(o, a)
+            utime.sleep(1)
+        # print("done")
+    def interact(self, object_code: int, action_code: int):
+        HW_board.userinteraction(object_code, action_code)
 
 class ADC:
     def __init__(self, pin):

@@ -44,12 +44,20 @@ class Board:
         self.gnd.state = -1
         self.vcc = HWPin("vcc")
         self.vcc.state = 1
-        self.grammar = []
+        self.objects = []
+        self.action_per_object = []
+        self.readable_action_per_object = {}
         wait_expr = "do_nothing"
-        self.grammar.append(wait_expr)
+        self.objects.append(wait_expr)
+        self.action_per_object.append([])
+        self.readable_action_per_object[wait_expr] = []
     
-    def updategrammar(self, expressions):
-        self.grammar.extend(expressions)
+    def updategrammar(self, object_key, actions, readable_actions):
+        self.objects.append(object_key)
+        self.action_per_object.append(actions)
+        self.readable_action_per_object[object_key] = readable_actions
+        # print(object_key)
+        # print(self.readable_grammar.items())
     
     def __str__(self) -> str:
         return "board"
@@ -67,13 +75,12 @@ class Board:
         self.pins[pin].state = value
         self.updatecircuit()
         
-    def userinteraction(self, code: int):
-        code = code % len(self.grammar)
-        if code != 0:
-            # 0 for idle
-            # print("call", code, self.grammar)
-            # print(code)
-            self.grammar[code]()
+    def userinteraction(self, object_code: int, action_code: int):
+        object_idx = object_code % len(self.objects)
+        actions = self.action_per_object[object_idx]
+        if len(actions) != 0:
+            action_idx = action_code % len(actions)
+            actions[action_idx]()
         self.updatecircuit()
 
     def updatecircuit(self):
@@ -126,7 +133,7 @@ class LED(Component):
         # assume left is - right is +
         super().__init__(left, right) 
     def __str__(self) -> str:
-        return "LED with right {}".format(self.right)
+        return "LED at {}".format(self.right)
 
 class Button(Component):
     def __init__(self, left, right, board):
@@ -138,17 +145,20 @@ class Button(Component):
     def updategrammar(self):
         # self is a button, press and unpress in the relavent actions
         btn_combinations = [self.press, self.unpress]
-        self.board.updategrammar(btn_combinations)
+        readable_combinations = ["press", "unpress"]
+        self.board.updategrammar(str(self), btn_combinations, readable_combinations)
         # if push, high / unpush, low
     
     def press(self):
+        print("press!!")
         self.state = 1 # update internal state
 
     def unpress(self):
+        print("unpress!!")
         self.state = 0 # update internal state
 
     def __str__(self) -> str:
-        return "BTN with right {}".format(self.right)
+        return "BTN at {}".format(self.right)
 
 
 class AnalogComponent(Component):
@@ -170,15 +180,15 @@ class AnalogComponent(Component):
 
 class TemperatureSensor(AnalogComponent):
     def __str__(self):
-        return "Temperature sensor with right {}".format(self.right)
+        return "Temperature sensor at {}".format(self.right)
     
 class Potentialmeter(AnalogComponent):
     def __str__(self) -> str:
-        return "Potentialmeter sensor with right {}".format(self.right)
+        return "Potentialmeter sensor at {}".format(self.right)
 
 class Photoresistor(AnalogComponent):
     def __str__(self) -> str:
-        return "Photoresistor sensor with right {}".format(self.right)
+        return "Photoresistor sensor at {}".format(self.right)
 
 if __name__ == '__main__':
     print("currently assume one led with button, two pin in board")
@@ -190,14 +200,14 @@ if __name__ == '__main__':
     btn_right = int(input("BTN right 0 or 1: "))
     btn = Button(board.gnd, board.pins[btn_right], board)
 
-    board.pinmode(led_right, OUTPUT)
-    board.pinmode(btn_right, INPUT)
-    read_val = board.digitalread(btn_right)
-    print(read_val)
-    print(board.grammar)
-    print("press!!")
-    board.userinteraction(0)
-    print(board.digitalread(btn_right))
-    board.digitalwirte(led_right, 1)
-    print(board.digitalread(btn_right))
+    # board.pinmode(led_right, OUTPUT)
+    # board.pinmode(btn_right, INPUT)
+    # read_val = board.digitalread(btn_right)
+    # print(read_val)
+    # print(board.grammar)
+    # print("press!!")
+    # board.userinteraction(0)
+    # print(board.digitalread(btn_right))
+    # board.digitalwirte(led_right, 1)
+    # print(board.digitalread(btn_right))
     
