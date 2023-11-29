@@ -190,7 +190,7 @@ class Evaluator:
                 if fitness_i < fitness[index]:
                     fitness[index] = fitness_i
 
-        return sum(fitness)
+        return sum([max(0, f) for f in fitness])
 
 
 class Solution:
