@@ -8,7 +8,7 @@ def load_board(path_name):
         name = path_name.split("\\")[-1]
     else:
         name = path_name.split("/")[-1]
-    print(name)
+    # print(name)
     if name == "Button.py" or name == "StateChangeDetection.py":
         # Button.py
         led = simulator.LED(HW_board.gnd, HW_board.pins[13])

@@ -72,7 +72,7 @@ class Board:
         if code != 0:
             # 0 for idle
             # print("call", code, self.grammar)
-            print(code)
+            # print(code)
             self.grammar[code]()
         self.updatecircuit()
 
