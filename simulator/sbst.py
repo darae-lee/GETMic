@@ -9,7 +9,6 @@ class codeNodes:
         self.target_ids = []
         self.target_types = []
         self.infos = [] #(target_ids, target_types)
-        self.values = [] #(al, bd)
 
     def travel_and_update(self, node, prev_ids, prev_types):
         my_idx = id(node)
@@ -132,7 +131,6 @@ class codeNodes:
                     self.infos.append(info)
                     self.target_ids.append(info[0])
                     self.target_types.append(info[1])
-                    self.values.append([1000,1000])
         return node
 
 '''
@@ -140,55 +138,36 @@ for GA
 '''
 
 class Evaluator:
-    def __init__(self, setup_content, loop_content, productions, loop_count, local_count):
+    def __init__(self, setup_content, loop_content, loop_count):
         self.setup_content = setup_content
         self.loop_content = loop_content
-        self.productions = productions
-        self.productions_length = len(productions)
         self.loop_count = loop_count
-        self.local_count = local_count
-
-    def get_phenotype(self, codon: int) -> str:
-        return self.productions[codon % self.productions_length]
 
     def fill_user_interactions(self, codons: list):
-        interactions = [self.get_phenotype(codon) for codon in codons]
-        idx = 0  # idx of interactions
-        new_lines = []
-        # start_insert = False
-        lines = self.loop_content.split("\n")
-        for line in lines:
-            # if start_insert:
-            if line.strip().startswith("else") or line.strip().startswith("elif"):
-                new_lines.append(indentation + interactions[idx] + '\n')
-                idx += 1
-            else:
-                indentation = line[:len(line) - len(line.lstrip())]
-                new_lines.append(indentation + interactions[idx] + '\n')
-                idx += 1
-            # elif line.strip().startswith("if True"):
-            #     start_insert = True
-            new_lines.append(line + '\n')
-        last_line = lines[-1]
-        indentation = last_line[:len(last_line) - len(last_line.lstrip())]
-        new_lines.append(indentation + interactions[idx] + '\n')
-        return "".join(new_lines)
+        loop_content_lines = self.loop_content.strip().split('\n')
+        interaction_code = f"""
+interaction_seq = {codons}
+interactor = UserInteract(interaction_seq)
+interactor.start()
 
-    def evaluate(self, codons):
+for _ in range({self.loop_count}):"""
+        for line in loop_content_lines:
+            interaction_code += f"""
+    {line}"""
+        return interaction_code
+
+    def evaluate(self, codons):        
         exec(self.setup_content, globals())
 
+        global fitness
         fitness = [float('inf')] * target_cnt
-        for loop_idx in range(self.loop_count):
-            local_codons = codons[loop_idx*self.local_count : (loop_idx+1)*self.local_count]
-            local_code = self.fill_user_interactions(local_codons)
-            
-            exec(local_code, globals())
 
-            for index, f in enumerate(values):
-                al, bd = f[0], f[1]
-                fitness_i = al + (1 - 1.001 ** (-bd))
-                if fitness_i < fitness[index]:
-                    fitness[index] = fitness_i
+        global als
+        als = [0] * target_cnt
+
+        loop_code = self.fill_user_interactions(codons)
+        
+        exec(loop_code, globals())
 
         return sum([max(0, f) for f in fitness])
 
@@ -204,8 +183,8 @@ class Solution:
 
 def random_codons(codons_length, num_range) -> list:
     sol = []
-    for i in range(codons_length):
-        sol.append(random.randint(num_range[0], num_range[1]))
+    for _ in range(codons_length):
+        sol.append((random.randint(num_range[0], num_range[1]), random.randint(num_range[0], num_range[1])))
     return sol
 
 
@@ -227,7 +206,7 @@ def crossover(rate, p1, p2):
 def mutate(rate, s, num_range):
     for i in range(len(s.sol)):
         if random.random() < rate:
-            s.sol = s.sol[:i] + [random.randint(num_range[0], num_range[1])] + s.sol[i + 1:]
+            s.sol = s.sol[:i] + [(random.randint(num_range[0], num_range[1]), random.randint(num_range[0], num_range[1]))] + s.sol[i + 1:]
     return s
 
 
@@ -237,16 +216,17 @@ def select(k, population):
     return sorted(participants, key=lambda x: x.fitness, reverse=False)[0]
 
 
-def ga(loop_number, space_number, evaluator):
+def ga(codon_length, evaluator):
     population = []
     MAX_NUM = 2048  # TODO: 최대값 정하기
     for i in range(100):
-        s = Solution(random_codons(loop_number*space_number, (0, MAX_NUM)))
+        s = Solution(random_codons(codon_length, (0, MAX_NUM)))
         s.fitness = evaluator.evaluate(s.sol)
         population.append(s)
     count = 0
     budget = 100  # number of generations
     best_solution = population[0]
+
     while count < budget and best_solution.fitness > 0:
         next_gen = []
         while len(next_gen) < len(population):
@@ -270,6 +250,7 @@ def ga(loop_number, space_number, evaluator):
         population = sorted(population, key=lambda x: x.fitness, reverse=False)
         population = population[:50]  # regardless of generation, keep top 50s
         best_solution = population[0]
+        print(count, best_solution)
         count += 1
     return best_solution
 
@@ -279,17 +260,20 @@ branch condition functions
 '''
 k = 1
 
+# ret_bd=True면 and/or
+
 def testeq(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        global als
         bds = [0] * target_cnt
     for index in range(target_cnt):
-        al, bd = values[index]
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
+            if ret_bd:
+                als[index] = al
             if direction == 0:
                 bd = abs(l - r)
             else:
@@ -297,24 +281,27 @@ def testeq(l, r, node_idx, ret_bd=False):
             if ret_bd:
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+
+    if not ret_bd:
         return l == r
     else:
         return l == r, bds
 
 def testin(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        global als
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
+            if ret_bd:
+                als[index] = al
             dists = [abs(l - ref) for ref in r]
             if direction == 0:
                 bd = min(dists)
@@ -323,24 +310,26 @@ def testin(l, r, node_idx, ret_bd=False):
             if ret_bd:
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l in r
     else:
         return l in r, bds
 
 def testne(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        global als
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
+            if ret_bd:
+                als[index] = al
             if direction == 0:
                 bd = -abs(l - r)
             else:
@@ -348,24 +337,26 @@ def testne(l, r, node_idx, ret_bd=False):
             if ret_bd:
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l != r
     else:
         return l != r, bds
 
 def testgte(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        global als
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
+            if ret_bd:
+                als[index] = al
             if direction == 0:
                 bd = r - l + k
             else:
@@ -373,24 +364,26 @@ def testgte(l, r, node_idx, ret_bd=False):
             if ret_bd:
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l >= r
     else:
         return l >= r, bds
 
 def testlte(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        global als
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
+            if ret_bd:
+                als[index] = al
             if direction == 0:
                 bd = l - r + k
             else:
@@ -398,24 +391,26 @@ def testlte(l, r, node_idx, ret_bd=False):
             if ret_bd:
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l <= r
     else:
         return l <= r, bds
 
 def testgt(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        global als
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
+            if ret_bd:
+                als[index] = al
             if direction == 0:
                 bd = r - l + k
             else:
@@ -423,24 +418,26 @@ def testgt(l, r, node_idx, ret_bd=False):
             if ret_bd:
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l > r
     else:
         return l > r, bds
 
 def testlt(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        global als
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
+            if ret_bd:
+                als[index] = al
             if direction == 0:
                 bd = l - r + k
             else:
@@ -448,16 +445,16 @@ def testlt(l, r, node_idx, ret_bd=False):
             if ret_bd:
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l < r
     else:
         return l < r, bds
 
 def testand(l_info, r_info, node_idx):
-    global values
+    global fitness, als
     l, l_bds = l_info
     r, r_bds = r_info
     for index in range(target_cnt):
@@ -471,13 +468,13 @@ def testand(l_info, r_info, node_idx):
             else:
                 # at least one false
                 bd = min(l_bds[index], r_bds[index])
-            values[index][1] = bd
-            return l and r
-        else:
-            return l and r
+            fitness_i = als[index] + (1 - 1.001 ** (-bd))
+            if fitness_i < fitness[index]:
+                fitness[index] = fitness_i
+    return l and r
 
 def testor(l_info, r_info, node_idx):
-    global values
+    global fitness, als
     l, l_bds = l_info
     r, r_bds = r_info
     for index in range(target_cnt):
@@ -491,20 +488,10 @@ def testor(l_info, r_info, node_idx):
             else:
                 # should be all false
                 bd = max(l_bds[index], 0) + max(r_bds[index], 0)
-            values[index][1] = bd
-            return l or r
-        else:
-            return l or r
-
-
-def erase_sleep(code):
-    lines = []
-    for line in code.split("\n"):
-        if line == "import utime" or line.strip().startswith("utime.sleep"):
-            continue
-        else:
-            lines.append(line)
-    return "\n".join(lines) + "\n"
+            fitness_i = als[index] + (1 - 1.001 ** (-bd))
+            if fitness_i < fitness[index]:
+                fitness[index] = fitness_i
+    return l or r
 
 '''
 Count # of space where user interaction can be inserted
@@ -528,7 +515,6 @@ def count_space(code):
 
 # usage: python sbst.py target_codes/{}.py
 if __name__ == "__main__":
-    global values
     global al, bd
     random.seed(0)
     parser = argparse.ArgumentParser()
@@ -538,7 +524,7 @@ if __name__ == "__main__":
     with open(args.target, "r") as f:
         code = f.read()
     
-    code = erase_sleep(code)  # sleep하는 코드 지우기
+    # code = erase_sleep(code)  # sleep하는 코드 지우기
     space_number = count_space(code)  # codons의 길이 계산
     tree = ast.parse(code)
 
@@ -569,18 +555,8 @@ if __name__ == "__main__":
                                 ast.Name(id="\""+args.target+"\"", ctx=ast.Load())],
                             keywords=[]))
     
-    interactor_node = ast.Assign(
-                        targets=[
-                            ast.Name(id='interactor', ctx=ast.Store())],
-                        value=ast.Call(
-                            func=ast.Name(id='UserInteract', ctx=ast.Load()),
-                            args=[],
-                            keywords=[])
-                        )
     ast.fix_missing_locations(load_board_node)
     initial_tree.body.append(load_board_node)
-    ast.fix_missing_locations(interactor_node)
-    initial_tree.body.append(interactor_node)
 
     for index2, node in enumerate(tree.body[index:]):
         if isinstance(node, ast.While):
@@ -602,8 +578,6 @@ if __name__ == "__main__":
     print(f"nodes.infos: {nodes.infos}")
     print(f"nodes.target_ids: {nodes.target_ids}")
     print(f"nodes.target_types: {nodes.target_types}")
-    print(f"nodes.values: {nodes.values}")
-    values = nodes.values # list of [al, bd]
 
     setup_content = f'''
 target_cnt = {len(nodes.target_ids)}
@@ -615,32 +589,34 @@ target_types = {nodes.target_types}
     initial_content = ast.unparse(initial_tree)
     loop_content = ast.unparse(loop_tree)
 
+    print("-----initial-----")
+    print(initial_content)
+    print("-----setup-----")
+    print(setup_content)
+    print("-----loop-----")
+    print(loop_content)
+    print("----------")
+
     #
     exec(initial_content, globals())
 
-    exec(setup_content, globals())
-
     # 가능한 user interaction 가져오기
-    user_interactions = interactor.codes
-    interaction_cnt = len(user_interactions)
-    productions = [f"interactor.interact({num})" for num in range(interaction_cnt)]
+    objects = machine.HW_board.objects
+    actions_per_object = machine.HW_board.action_per_object
+    # print(objects)
+    # print(actions_per_object)
+
+    objects_cnt = len(objects)
+    actions_cnt = [len(actions) for actions in actions_per_object]
     loop_count = 5
-    print("user interaction cnt: ", interaction_cnt)
-    print("------------")
-    print("setup content: ", setup_content)
-    print("------------")
-    print("loop content: ", ast.unparse(loop_tree))
-    print("------------")
-    print("productions: ", productions)
-    print("============")
 
     evaluator = Evaluator(
                     setup_content=setup_content,
                     loop_content=loop_content,
-                    productions=productions,
-                    loop_count=loop_count, # loop 몇 번 돌건지
-                    local_count=space_number, # local action 개수
+                    loop_count=100 # loop 몇 번 돌건지
     )
     
-    result = ga(loop_count, space_number, evaluator)
+    codon_length = 500
+    result = ga(codon_length, evaluator)
+    # result = ga(loop_count, space_number, evaluator)
     print("result: ", result, "done.")
