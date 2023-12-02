@@ -1,17 +1,20 @@
+import machine
 from machine import Pin
 from machine import UserInteract
+import utime
 
+machine.load_board(__file__)
 buttonPin = 2
 ledPin = 13
 buttonState = 0
-interactor = UserInteract()
-codes = interactor.codes
-print(codes)
 p1 = Pin(ledPin, Pin.OUT)
 p2 = Pin(buttonPin, Pin.IN, Pin.PULL_DOWN)
-interactions = [0, 1, 2, 1, 0]
-for interact in interactions:
-    interactor.interact(interact)
+
+interaction_seq = [(0, 1), (1, 0), (1, 1), (1, 0), (0, 1)]
+interactor = UserInteract(interaction_seq)
+interactor.start()
+
+for i in range(10):
     buttonState = p2.value()
     print(buttonState)
     if buttonState == 1:
@@ -20,5 +23,5 @@ for interact in interactions:
     else:
         p1.value(0)
         print("down")
-    # utime.sleep(1)
-    input("wait")
+    utime.sleep(1)
+    # input("wait")
