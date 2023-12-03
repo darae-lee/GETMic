@@ -173,7 +173,8 @@ class AnalogComponent(Component):
 
     def updategrammar(self):
         temp_combinations = [lambda x=value: self.setvalue(x) for value in range(self.max_value)]
-        self.board.updategrammar(temp_combinations)
+        readable_combinations = [f"set_value_{x}" for x in range(self.max_value)]
+        self.board.updategrammar(str(self), temp_combinations, readable_combinations)
     
     def setvalue(self, value):
         self.state = value # update internal state
