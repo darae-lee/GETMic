@@ -1,17 +1,20 @@
 import random
-INPUT = 0
-OUTPUT = 1
-NON_SET = 2
+from enum import Enum
+
+class pinMode(Enum):
+    INPUT = 0
+    OUTPUT = 1
+    NON_SET = 2
 
 class HWPin:
-    def __init__(self, name="pin"):
-        self.state = 0
+    def __init__(self, name="pin", state=0, pin_mode=pinMode.NON_SET):
+        self.state = state
         self.name = name
         self.connect = [] # it should contain component, not its pin except for the board pin...
-        self.mode = NON_SET
+        self.mode = pin_mode
     def __str__(self) -> str:
         return self.name
-    def travel(self, state=-1, dir=OUTPUT):
+    def travel(self, state=-1, dir=pinMode.OUTPUT):
         # print("I am PIN!", self.name)
         if state == -1:
             state = self.state
@@ -40,10 +43,8 @@ class Board:
             self.pins.append(HWPin(f"pin{i}"))
         # self.pin1 = HWPin("pin1")
         # self.pin2 = HWPin("pin2")
-        self.gnd = HWPin("gnd")
-        self.gnd.state = -1
-        self.vcc = HWPin("vcc")
-        self.vcc.state = 1
+        self.gnd = HWPin(name="gnd", state=-1)
+        self.vcc = HWPin(name="vcc", state=1)
         self.objects = []
         self.action_per_object = []
         self.readable_action_per_object = {}
@@ -87,18 +88,18 @@ class Board:
         # starting from gnd?
         # starting from all output pins, propogate its state
         for pin in self.pins:
-            if pin.mode == OUTPUT:
+            if pin.mode == pinMode.OUTPUT:
                 # print("output", pin)
                 # send travel????
-                pin.travel(dir=OUTPUT)
+                pin.travel(dir=pinMode.OUTPUT)
                 pass
-            elif pin.mode == INPUT:
+            elif pin.mode == pinMode.INPUT:
                 # print("input", pin)
                 # send travel in reverse way...?
                 # for other, startin from the gnd direction (actually vcc)
                 pass
         self.gnd.state = -1
-        self.gnd.travel(dir=INPUT)
+        self.gnd.travel(dir=pinMode.INPUT)
         self.gnd.state = -1
         # static one?
         pass
@@ -106,12 +107,17 @@ class Board:
 class Component:
     def __init__(self, left, right):
         self.left = HWPin("left")
-        self.left.connect.append(left)
-        left.connect.append(self)
         self.right = HWPin("right")
-        self.right.connect.append(right)
-        right.connect.append(self)
         self.state = 0
+        self.connect(left=left, right=right)
+    
+    def connect(self, left=None, right=None):
+        if left is not None:
+            self.left.connect.append(left)
+            left.connect.append(self)
+        if right is not None:
+            self.right.connect.append(right)
+            right.connect.append(self)
     
     def travel(self, state, dir):
         # print("HI!", dir, state, self.state)
@@ -119,7 +125,7 @@ class Component:
             state = self.state
         else:
             self.state = state
-        if dir == OUTPUT:
+        if dir == pinMode.OUTPUT:
             # print("call left", self.state)
             self.left.travel(self.state, dir)
         else:
