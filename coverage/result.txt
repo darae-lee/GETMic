@@ -1,8 +1,30 @@
-Trials needed to achieve 100% coverage for Button.py: 1104
- Execution Time: 64.27790 sec
-Trials needed to achieve 100% coverage for IfStatementConditional.py: 10
- Execution Time: 0.44551 sec
-Trials needed to achieve 100% coverage for LoveOMeter.py: 477
- Execution Time: 67.91819 sec
-Trials needed to achieve 100% coverage for StateChangeDetection.py: 2
- Execution Time: 0.24983 sec
+
+Coverage Result for Button.py (with ui_length = 20, trial_limit = 1000)
+    - Trials needed to achieve 100% coverage : 1
+    - Max Coverage % until 1000 trials: 100.00%
+    - Total Execution Time: 0.07000 sec
+        
+
+Coverage Result for IfStatementConditional.py (with ui_length = 20, trial_limit = 1000)
+    - Trials needed to achieve 100% coverage : 1
+    - Max Coverage % until 1000 trials: 100.00%
+    - Total Execution Time: 0.06687 sec
+        
+
+Coverage Result for LoveOMeter.py (with ui_length = 20, trial_limit = 1000)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 85.71%
+    - Total Execution Time: 319.94571 sec
+        
+
+Coverage Result for StateChangeDetection.py (with ui_length = 20, trial_limit = 1000)
+    - Trials needed to achieve 100% coverage : 369
+    - Max Coverage % until 1000 trials: 100.00%
+    - Total Execution Time: 26.61331 sec
+        
+
+Coverage Result for SwitchCase.py (with ui_length = 20, trial_limit = 1000)
+    - Trials needed to achieve 100% coverage : 1
+    - Max Coverage % until 1000 trials: 100.00%
+    - Total Execution Time: 0.06663 sec
+        
