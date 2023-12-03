@@ -1,11 +1,11 @@
-import os
-import sys
-parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-sys.path.append(os.path.join(parent_dir, 'simulator'))
+import os  # pragma: no cover
+import sys  # pragma: no cover
+parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover
+sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover
 import utime  # pragma: no cover
 import machine  # pragma: no cover
 
-def exec_code(random_interaction_seq: list, clock_time: int):
+def exec_code(random_interaction_seq: list):
     machine.load_board(__file__)
     
     buttonPin = 2
@@ -21,7 +21,7 @@ def exec_code(random_interaction_seq: list, clock_time: int):
     interactor = machine.UserInteract(random_interaction_seq)
     interactor.start()
 
-    for i in range(clock_time):
+    while True:
         buttonState = p2.value()
         if buttonState != lastButtonState:
             if buttonState == 1:
@@ -40,3 +40,5 @@ def exec_code(random_interaction_seq: list, clock_time: int):
             p1.value(0)
         
         utime.sleep(1)
+        if not interactor.is_alive():
+            break

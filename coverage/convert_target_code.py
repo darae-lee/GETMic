@@ -24,10 +24,10 @@ def convert_import_code(code):
     # import_code = []
     # for line in code:
     #     import_code.append(line.rstrip() + "  # pragma: no cover\n")
-    import_code = ["import os\n",
-                    "import sys\n",
-                   "parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))\n"
-                    "sys.path.append(os.path.join(parent_dir, 'simulator'))\n",
+    import_code = ["import os  # pragma: no cover\n",
+                    "import sys  # pragma: no cover\n",
+                   "parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover\n"
+                    "sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover\n",
                     "import utime  # pragma: no cover\n",
                     "import machine  # pragma: no cover\n",
                     "\n"]
@@ -35,7 +35,7 @@ def convert_import_code(code):
 
 
 def convert_setup_code(code):
-    body_code = ["def exec_code(random_interaction_seq: list, clock_time: int):\n",
+    body_code = ["def exec_code(random_interaction_seq: list):\n",
                  INDENT + "machine.load_board(__file__)\n"]
     for line in code:
         body_code.append(INDENT + line)
@@ -46,9 +46,11 @@ def convert_setup_code(code):
 
 
 def convert_loop_code(code):
-    loop_code = [INDENT + "for i in range(clock_time):\n"]
-    for line in code[1:]:
+    loop_code = []
+    for line in code:
         loop_code.append(INDENT + line)
+    loop_code.extend([INDENT*2 + "if not interactor.is_alive():\n",
+                      INDENT*3 + "break\n"])
     return loop_code
 
 
