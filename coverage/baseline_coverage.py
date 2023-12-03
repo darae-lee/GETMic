@@ -77,8 +77,8 @@ if __name__ == "__main__":
     end = time.time()
 
     content_to_write = f'''
-Coverage Result for {args.filename} (with UI_LENGTH = {args.l})
-    - Trials needed to achieve 100% coverage : { "-" if trials_needed==1000 else trials_needed}
+Coverage Result for {args.filename} (with ui_length = {args.l}, trial_limit = {args.t})
+    - Trials needed to achieve 100% coverage : { "-" if trials_needed==int(args.t) else trials_needed}
     - Max Coverage % until {args.t} trials: {max_coverage:.2f}%
     - Total Execution Time: {end - start:.5f} sec
         
