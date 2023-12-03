@@ -1,12 +1,12 @@
-from machine import Pin
+from machine
 import utime
 
 buttonPin = 2
 ledPin = 13
 buttonState = 0
 
-p1 = Pin(ledPin, Pin.OUT)
-p2 = Pin(buttonPin, Pin.IN, Pin.PULL_DOWN)
+p1 = machine.Pin(ledPin, machine.Pin.OUT)
+p2 = machine.Pin(buttonPin, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
 while True:
     buttonState = p2.value()
