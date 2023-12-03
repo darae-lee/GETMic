@@ -1,0 +1,8 @@
+Trials needed to achieve 100% coverage for Button.py: 1104
+ Execution Time: 64.27790 sec
+Trials needed to achieve 100% coverage for IfStatementConditional.py: 10
+ Execution Time: 0.44551 sec
+Trials needed to achieve 100% coverage for LoveOMeter.py: 477
+ Execution Time: 67.91819 sec
+Trials needed to achieve 100% coverage for StateChangeDetection.py: 2
+ Execution Time: 0.24983 sec

@@ -77,5 +77,8 @@ if __name__ == "__main__":
     trials_needed = calculate_coverage(args.target)
     end = time.time()
 
+    with open("coverage/result.txt", 'a') as file:
+        file.write(f"Trials needed to achieve 100% coverage for {args.target}: {trials_needed}\n Execution Time: {end - start:.5f} sec\n")
+
     print(f"Trials needed to achieve 100% coverage for {args.target}: {trials_needed}")
     print(f"Execution Time: {end - start:.5f} sec")
