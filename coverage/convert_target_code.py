@@ -21,16 +21,13 @@ def separate_code(code):
 
 
 def convert_import_code(code):
-    # import_code = []
-    # for line in code:
-    #     import_code.append(line.rstrip() + "  # pragma: no cover\n")
     import_code = ["import os  # pragma: no cover\n",
-                    "import sys  # pragma: no cover\n",
+                   "import sys  # pragma: no cover\n",
                    "parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover\n"
-                    "sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover\n",
-                    "import utime  # pragma: no cover\n",
-                    "import machine  # pragma: no cover\n",
-                    "\n"]
+                   "sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover\n",
+                   "import utime  # pragma: no cover\n",
+                   "import machine  # pragma: no cover\n",
+                   "\n"]
     return import_code
 
 
