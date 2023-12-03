@@ -14,7 +14,7 @@ interaction_seq = [(0, 1), (1, 0), (1, 1), (1, 0), (0, 1)]
 interactor = UserInteract(interaction_seq)
 interactor.start()
 
-for i in range(10):
+while True:
     buttonState = p2.value()
     print(buttonState)
     if buttonState == 1:
@@ -24,4 +24,6 @@ for i in range(10):
         p1.value(0)
         print("down")
     utime.sleep(1)
+    if not interactor.is_alive():
+        break
     # input("wait")
