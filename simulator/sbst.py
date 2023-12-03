@@ -226,6 +226,7 @@ def ga(codon_length, evaluator):
     count = 0
     budget = 100  # number of generations
     best_solution = population[0]
+    print(f"best sol in initial population: {best_solution}")
 
     while count < budget and best_solution.fitness > 0:
         next_gen = []
@@ -265,20 +266,19 @@ k = 1
 def testeq(l, r, node_idx, ret_bd=False):
     global fitness
     if ret_bd:
-        global als
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            if ret_bd:
-                als[index] = al
             if direction == 0:
                 bd = abs(l - r)
             else:
                 bd = -abs(l - r)
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
@@ -288,26 +288,25 @@ def testeq(l, r, node_idx, ret_bd=False):
     if not ret_bd:
         return l == r
     else:
-        return l == r, bds
+        return l == r, als, bds
 
 def testin(l, r, node_idx, ret_bd=False):
     global fitness
     if ret_bd:
-        global als
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            if ret_bd:
-                als[index] = al
             dists = [abs(l - ref) for ref in r]
             if direction == 0:
                 bd = min(dists)
             else:
                 bd = -min(dists)
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
@@ -316,25 +315,24 @@ def testin(l, r, node_idx, ret_bd=False):
     if not ret_bd:
         return l in r
     else:
-        return l in r, bds
+        return l in r, als, bds
 
 def testne(l, r, node_idx, ret_bd=False):
     global fitness
     if ret_bd:
-        global als
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            if ret_bd:
-                als[index] = al
             if direction == 0:
                 bd = -abs(l - r)
             else:
                 bd = abs(l - r)
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
@@ -343,25 +341,24 @@ def testne(l, r, node_idx, ret_bd=False):
     if not ret_bd:
         return l != r
     else:
-        return l != r, bds
+        return l != r, als, bds
 
 def testgte(l, r, node_idx, ret_bd=False):
     global fitness
     if ret_bd:
-        global als
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            if ret_bd:
-                als[index] = al
             if direction == 0:
                 bd = r - l + k
             else:
                 bd = l - r + k
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
@@ -370,25 +367,24 @@ def testgte(l, r, node_idx, ret_bd=False):
     if not ret_bd:
         return l >= r
     else:
-        return l >= r, bds
+        return l >= r, als, bds
 
 def testlte(l, r, node_idx, ret_bd=False):
     global fitness
     if ret_bd:
-        global als
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            if ret_bd:
-                als[index] = al
             if direction == 0:
                 bd = l - r + k
             else:
                 bd = r - l + k
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
@@ -397,25 +393,24 @@ def testlte(l, r, node_idx, ret_bd=False):
     if not ret_bd:
         return l <= r
     else:
-        return l <= r, bds
+        return l <= r, als, bds
 
 def testgt(l, r, node_idx, ret_bd=False):
     global fitness
     if ret_bd:
-        global als
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            if ret_bd:
-                als[index] = al
             if direction == 0:
                 bd = r - l + k
             else:
                 bd = l - r + k
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
@@ -424,25 +419,24 @@ def testgt(l, r, node_idx, ret_bd=False):
     if not ret_bd:
         return l > r
     else:
-        return l > r, bds
+        return l > r, als, bds
 
 def testlt(l, r, node_idx, ret_bd=False):
     global fitness
     if ret_bd:
-        global als
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            if ret_bd:
-                als[index] = al
             if direction == 0:
                 bd = l - r + k
             else:
                 bd = r - l + k
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
@@ -451,12 +445,12 @@ def testlt(l, r, node_idx, ret_bd=False):
     if not ret_bd:
         return l < r
     else:
-        return l < r, bds
+        return l < r, als, bds
 
 def testand(l_info, r_info, node_idx):
     global fitness, als
-    l, l_bds = l_info
-    r, r_bds = r_info
+    l, l_als, l_bds = l_info
+    r, r_als, r_bds = r_info
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -468,15 +462,15 @@ def testand(l_info, r_info, node_idx):
             else:
                 # at least one false
                 bd = min(l_bds[index], r_bds[index])
-            fitness_i = als[index] + (1 - 1.001 ** (-bd))
+            fitness_i = l_als[index] + (1 - 1.001 ** (-bd))
             if fitness_i < fitness[index]:
                 fitness[index] = fitness_i
     return l and r
 
 def testor(l_info, r_info, node_idx):
     global fitness, als
-    l, l_bds = l_info
-    r, r_bds = r_info
+    l, l_als, l_bds = l_info
+    r, r_als, r_bds = r_info
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -488,30 +482,10 @@ def testor(l_info, r_info, node_idx):
             else:
                 # should be all false
                 bd = max(l_bds[index], 0) + max(r_bds[index], 0)
-            fitness_i = als[index] + (1 - 1.001 ** (-bd))
+            fitness_i = l_als[index] + (1 - 1.001 ** (-bd))
             if fitness_i < fitness[index]:
                 fitness[index] = fitness_i
     return l or r
-
-'''
-Count # of space where user interaction can be inserted
-'''
-def count_space(code):
-    inside_while = False
-    inside_comment = False
-    space_count = 0
-    for line in code.split("\n"):
-        if inside_while:
-            stripped_line = line.strip()
-            if stripped_line.startswith("'''") or stripped_line.startswith('"""'):
-                inside_comment = not inside_comment
-            if not (stripped_line.startswith('#') or stripped_line == '') and not inside_comment:
-                space_count += 1
-        elif line.strip().startswith("while True"):
-            inside_while = 1
-            continue
-    space_count += 1
-    return space_count
 
 # usage: python sbst.py target_codes/{}.py
 if __name__ == "__main__":
@@ -524,8 +498,6 @@ if __name__ == "__main__":
     with open(args.target, "r") as f:
         code = f.read()
     
-    # code = erase_sleep(code)  # sleep하는 코드 지우기
-    space_number = count_space(code)  # codons의 길이 계산
     tree = ast.parse(code)
 
     '''
@@ -600,23 +572,12 @@ target_types = {nodes.target_types}
     #
     exec(initial_content, globals())
 
-    # 가능한 user interaction 가져오기
-    objects = machine.HW_board.objects
-    actions_per_object = machine.HW_board.action_per_object
-    # print(objects)
-    # print(actions_per_object)
-
-    objects_cnt = len(objects)
-    actions_cnt = [len(actions) for actions in actions_per_object]
-    loop_count = 5
-
     evaluator = Evaluator(
                     setup_content=setup_content,
                     loop_content=loop_content,
-                    loop_count=100 # loop 몇 번 돌건지
+                    loop_count=10 # loop 몇 번 돌건지
     )
     
-    codon_length = 500
+    codon_length = 6
     result = ga(codon_length, evaluator)
-    # result = ga(loop_count, space_number, evaluator)
     print("result: ", result, "done.")
