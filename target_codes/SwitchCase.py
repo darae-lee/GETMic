@@ -13,15 +13,15 @@ adc = machine.ADC(adc_pin)
 
 while True:
     sensorReading = adc.read_u16()
-    range = int((sensorReading - sensorMin) * (new_max - new_min) / (sensorMax - sensorMin) + new_min)
+    local_range = int((sensorReading - sensorMin) * (new_max - new_min) / (sensorMax - sensorMin) + new_min)
 
-    if range == 0:
+    if local_range == 0:
         print("dark")
-    elif range == 1:
+    elif local_range == 1:
         print("dim")
-    elif range == 2:
+    elif local_range == 2:
         print("medium")
-    elif range == 3:
+    elif local_range == 3:
         print("bright")
     
     utime.sleep(2)
