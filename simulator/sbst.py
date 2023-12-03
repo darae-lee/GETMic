@@ -138,10 +138,9 @@ for GA
 '''
 
 class Evaluator:
-    def __init__(self, setup_content, loop_content, loop_count):
+    def __init__(self, setup_content, loop_content):
         self.setup_content = setup_content
         self.loop_content = loop_content
-        self.loop_count = loop_count
 
     def fill_user_interactions(self, codons: list):
         loop_content_lines = self.loop_content.strip().split('\n')
@@ -150,10 +149,13 @@ interaction_seq = {codons}
 interactor = UserInteract(interaction_seq)
 interactor.start()
 
-for _ in range({self.loop_count}):"""
+while True:"""
         for line in loop_content_lines:
             interaction_code += f"""
     {line}"""
+        interaction_code += """
+    if not interactor.is_alive():
+        break"""
         return interaction_code
 
     def evaluate(self, codons):        
@@ -161,9 +163,6 @@ for _ in range({self.loop_count}):"""
 
         global fitness
         fitness = [float('inf')] * target_cnt
-
-        global als
-        als = [0] * target_cnt
 
         loop_code = self.fill_user_interactions(codons)
         
@@ -219,7 +218,7 @@ def select(k, population):
 def ga(codon_length, evaluator):
     population = []
     MAX_NUM = 2048  # TODO: 최대값 정하기
-    for i in range(100):
+    for i in range(10):
         s = Solution(random_codons(codon_length, (0, MAX_NUM)))
         s.fitness = evaluator.evaluate(s.sol)
         population.append(s)
@@ -232,8 +231,8 @@ def ga(codon_length, evaluator):
         next_gen = []
         while len(next_gen) < len(population):
             # selecting the fitter parents
-            p1 = select(20, population)
-            p2 = select(20, population)
+            p1 = select(2, population)
+            p2 = select(2, population)
 
             # crossover to generate a pair of offsprings
             o1, o2 = crossover(0.9, p1, p2)
@@ -249,7 +248,7 @@ def ga(codon_length, evaluator):
         # now we have the full next gen
         population.extend(next_gen)
         population = sorted(population, key=lambda x: x.fitness, reverse=False)
-        population = population[:50]  # regardless of generation, keep top 50s
+        population = population[:10]
         best_solution = population[0]
         print(count, best_solution)
         count += 1
@@ -259,7 +258,7 @@ def ga(codon_length, evaluator):
 '''
 branch condition functions
 '''
-k = 1
+k = 0.000000001
 
 # ret_bd=True면 and/or
 
@@ -448,7 +447,7 @@ def testlt(l, r, node_idx, ret_bd=False):
         return l < r, als, bds
 
 def testand(l_info, r_info, node_idx):
-    global fitness, als
+    global fitness
     l, l_als, l_bds = l_info
     r, r_als, r_bds = r_info
     for index in range(target_cnt):
@@ -465,10 +464,11 @@ def testand(l_info, r_info, node_idx):
             fitness_i = l_als[index] + (1 - 1.001 ** (-bd))
             if fitness_i < fitness[index]:
                 fitness[index] = fitness_i
+            # print("and: ", fitness_i, l_als[index], r_als[index], bd)
     return l and r
 
 def testor(l_info, r_info, node_idx):
-    global fitness, als
+    global fitness
     l, l_als, l_bds = l_info
     r, r_als, r_bds = r_info
     for index in range(target_cnt):
@@ -490,7 +490,7 @@ def testor(l_info, r_info, node_idx):
 # usage: python sbst.py target_codes/{}.py
 if __name__ == "__main__":
     global al, bd
-    random.seed(0)
+    random.seed(21)
     parser = argparse.ArgumentParser()
     parser.add_argument("target", help="the target python file to generate unit tests for")
     args = parser.parse_args()
@@ -574,10 +574,9 @@ target_types = {nodes.target_types}
 
     evaluator = Evaluator(
                     setup_content=setup_content,
-                    loop_content=loop_content,
-                    loop_count=10 # loop 몇 번 돌건지
+                    loop_content=loop_content
     )
     
-    codon_length = 6
+    codon_length = 10
     result = ga(codon_length, evaluator)
     print("result: ", result, "done.")
