@@ -15,8 +15,8 @@ def exec_code(random_interaction_seq: list, clock_time: int):
     buttonState = 0
     lastButtonState = 0
     
-    p1 = Pin(ledPin, Pin.OUT)
-    p2 = Pin(buttonPin, Pin.IN, Pin.PULL_DOWN)
+    p1 = machine.Pin(ledPin, machine.Pin.OUT)
+    p2 = machine.Pin(buttonPin, machine.Pin.IN, machine.Pin.PULL_DOWN)
     
     interactor = machine.UserInteract(random_interaction_seq)
     interactor.start()

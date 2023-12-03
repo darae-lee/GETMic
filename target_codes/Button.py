@@ -1,4 +1,4 @@
-from machine
+import machine
 import utime
 
 buttonPin = 2
