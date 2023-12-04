@@ -7,6 +7,8 @@ import os
 import json
 import time
 
+random.seed(0)
+
 class codeNodes:
     def __init__(self):
         self.target_ids = []
@@ -206,7 +208,7 @@ def mutate(rate, s, num_range):
 def select(k, population):
     # we randomly sample k solutions from the population
     participants = random.sample(population, k)
-    return sorted(participants, key=lambda x: x.fitness, reverse=False)[0]
+    return sorted(participants, key=lambda x: (x.fitness, x.sol[0][0]), reverse=False)[0]
 
 def calculate_coverage(filename, solution):
     if filename == "Button.py":
@@ -242,8 +244,8 @@ def calculate_coverage(filename, solution):
 
     curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
     os.remove("ga/report.json")
-    # if abs(curr_coverage - 71.43) < 0.01:
-    #     cov.html_report()
+
+    cov.html_report(directory=f"ga/html_{curr_coverage}")  # for inspection
     cov.erase()
 
     return curr_coverage
@@ -259,6 +261,7 @@ def ga(filename, evaluator, ui_length, pp_size):
             break
     count = 0
     budget = 10  # number of generations
+    population = sorted(population, key=lambda x: (x.fitness, x.sol[0][0]), reverse=False)
     best_solution = population[0]
     print(f"best sol in initial population: {best_solution}")
 
@@ -282,7 +285,7 @@ def ga(filename, evaluator, ui_length, pp_size):
 
         # now we have the full next gen
         population.extend(next_gen)
-        population = sorted(population, key=lambda x: x.fitness, reverse=False)
+        population = sorted(population, key=lambda x: (x.fitness, x.sol[0][0]), reverse=False)
         population = population[:pp_size]
         best_solution = population[0]
         print(count, best_solution)
@@ -603,7 +606,6 @@ if __name__ == "__main__":
     parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
     sys.path.append(parent_dir)
 
-    random.seed(21)
     parser = argparse.ArgumentParser()
     parser.add_argument("filename", help="the python file to check baseline coverage")
     parser.add_argument("--p", type=int, help="GA population size")
