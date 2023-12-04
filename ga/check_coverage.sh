@@ -8,10 +8,10 @@ else
     touch "$result_file_path"
 fi
 
-python ga/sbst.py Button.py --p 10 --l 4
-python ga/sbst.py IfStatementConditional.py --p 10 --l 4
-python ga/sbst.py StateChangeDetection.py --p 10 --l 4
-python ga/sbst.py SwitchCase.py --p 10 --l 4
-python ga/sbst.py LoveOMeter.py --p 10 --l 4
+python ga/sbst.py Button.py --p 10 --l 10
+python ga/sbst.py IfStatementConditional.py --p 10 --l 10
+python ga/sbst.py StateChangeDetection.py --p 10 --l 10
+python ga/sbst.py SwitchCase.py --p 10 --l 10
+python ga/sbst.py LoveOMeter.py --p 10 --l 10
 
 echo "Done calculating GA coverage!"

@@ -3,6 +3,8 @@ INPUT = 0
 OUTPUT = 1
 NON_SET = 2
 
+random.seed(0)
+
 class HWPin:
     def __init__(self, name="pin"):
         self.state = 0

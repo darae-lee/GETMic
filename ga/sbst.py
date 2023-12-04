@@ -256,7 +256,7 @@ def ga(filename, evaluator, ui_length, pp_size):
         if s.fitness == 0:
             break
     count = 0
-    budget = 5  # number of generations
+    budget = 10  # number of generations
     best_solution = population[0]
     print(f"best sol in initial population: {best_solution}")
 
@@ -615,6 +615,7 @@ Coverage Result for {args.filename} (with ui_length = {args.l}, population_size 
     - Generations needed to achieve 100% coverage : { "-" if generations==100 else generations}
     - Max Coverage % until 100 generations: {max_coverage:.2f}%
     - Total Execution Time: {end - start:.5f} sec
+    - Best Test Case: {best_solution}
         
 '''
     with open("ga/result.txt", 'a') as file:
