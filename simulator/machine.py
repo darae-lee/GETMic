@@ -34,7 +34,7 @@ class UserInteract(threading.Thread):
     def run(self):
         for o, a in self.seq:
             self.interact(o, a)
-            utime.sleep(1)
+            utime.sleep(10)
         # print("done")
     def interact(self, object_code: int, action_code: int):
         HW_board.userinteraction(object_code, action_code)
