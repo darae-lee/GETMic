@@ -1,0 +1,35 @@
+
+Coverage Result for Button.py (with ui_length = 3, population_size = 8)
+    - Generations needed to achieve 100% coverage : 0
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 0.24745 sec
+    - Best Test Case: (1577, 1722), (165, 1060), (1990, 1658) with 0
+        
+
+Coverage Result for IfStatementConditional.py (with ui_length = 3, population_size = 8)
+    - Generations needed to achieve 100% coverage : 0
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 0.25888 sec
+    - Best Test Case: (1577, 1722), (165, 1060), (1990, 1658) with 0
+        
+
+Coverage Result for StateChangeDetection.py (with ui_length = 3, population_size = 8)
+    - Generations needed to achieve 100% coverage : 0
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 0.49231 sec
+    - Best Test Case: (583, 1834), (373, 329), (1310, 2004) with 0
+        
+
+Coverage Result for SwitchCase.py (with ui_length = 3, population_size = 8)
+    - Generations needed to achieve 100% coverage : 4
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 1.23801 sec
+    - Best Test Case: (1577, 1722), (1743, 415), (787, 1369) with 0
+        
+
+Coverage Result for LoveOMeter.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : 13
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 9.36473 sec
+    - Best Test Case: (1825, 595), (1710, 1295), (58, 9), (1951, 282), (1175, 150), (1383, 642), (1923, 1178), (1591, 1027), (1369, 655), (980, 913) with 0
+        

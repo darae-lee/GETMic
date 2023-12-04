@@ -161,8 +161,9 @@ while True:"""
         fitness = [float('inf')] * target_cnt
 
         loop_code = self.fill_user_interactions(codons)
-    
+        print("_________evaluate start______")
         exec(loop_code, globals())
+        print("_________evaluate end______")
 
         return sum([max(0, f) for f in fitness])
 
@@ -245,7 +246,7 @@ def calculate_coverage(filename, solution):
     curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
     os.remove("ga/report.json")
 
-    cov.html_report(directory=f"ga/html_{curr_coverage}")  # for inspection
+    # cov.html_report(directory=f"ga/html_{curr_coverage}")  # for inspection
     cov.erase()
 
     return curr_coverage
@@ -260,7 +261,7 @@ def ga(filename, evaluator, ui_length, pp_size):
         if s.fitness == 0:
             break
     count = 0
-    budget = 10  # number of generations
+    budget = 100  # number of generations
     population = sorted(population, key=lambda x: (x.fitness, x.sol[0][0]), reverse=False)
     best_solution = population[0]
     print(f"best sol in initial population: {best_solution}")
@@ -299,11 +300,10 @@ def ga(filename, evaluator, ui_length, pp_size):
 '''
 branch condition functions
 '''
-k = 0.00001
+k = 0.0000001
 
 def testeq(l, r, node_idx, ret_bd=False):
-    global fitness, interactor
-    interactor.timer_lock.acquire()
+    global fitness
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt
@@ -321,10 +321,11 @@ def testeq(l, r, node_idx, ret_bd=False):
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
+                if direction != 0:
+                    fitness_i += k
                 if fitness_i < fitness[index]:
                     fitness[index] = fitness_i
     
-    interactor.timer_lock.release()
     if not ret_bd:
         return l == r
     else:
@@ -332,7 +333,6 @@ def testeq(l, r, node_idx, ret_bd=False):
 
 def testin(l, r, node_idx, ret_bd=False):
     global fitness, interactor
-    interactor.timer_lock.acquire()
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt
@@ -360,8 +360,7 @@ def testin(l, r, node_idx, ret_bd=False):
         return l in r, als, bds
 
 def testne(l, r, node_idx, ret_bd=False):
-    global fitness, interactor
-    interactor.timer_lock.acquire()
+    global fitness
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt
@@ -379,17 +378,17 @@ def testne(l, r, node_idx, ret_bd=False):
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
+                if direction == 0:
+                    fitness_i += k
                 if fitness_i < fitness[index]:
                     fitness[index] = fitness_i
-    interactor.timer_lock.release()
     if not ret_bd:
         return l != r
     else:
         return l != r, als, bds
 
 def testgte(l, r, node_idx, ret_bd=False):
-    global fitness, interactor
-    interactor.timer_lock.acquire()
+    global fitness
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt
@@ -407,17 +406,17 @@ def testgte(l, r, node_idx, ret_bd=False):
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
+                if direction != 0:
+                    fitness_i += k
                 if fitness_i < fitness[index]:
                     fitness[index] = fitness_i
-    interactor.timer_lock.release()
     if not ret_bd:
         return l >= r
     else:
         return l >= r, als, bds
 
 def testlte(l, r, node_idx, ret_bd=False):
-    global fitness, interactor
-    interactor.timer_lock.acquire()
+    global fitness
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt
@@ -435,17 +434,17 @@ def testlte(l, r, node_idx, ret_bd=False):
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
+                if direction != 0:
+                    fitness_i += k
                 if fitness_i < fitness[index]:
                     fitness[index] = fitness_i
-    interactor.timer_lock.release()
     if not ret_bd:
         return l <= r
     else:
         return l <= r, als, bds
 
 def testgt(l, r, node_idx, ret_bd=False):
-    global fitness, interactor
-    interactor.timer_lock.acquire()
+    global fitness
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt
@@ -463,17 +462,17 @@ def testgt(l, r, node_idx, ret_bd=False):
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
+                if direction == 0:
+                    fitness_i += k
                 if fitness_i < fitness[index]:
                     fitness[index] = fitness_i
-    interactor.timer_lock.release()
     if not ret_bd:
         return l > r
     else:
         return l > r, als, bds
 
 def testlt(l, r, node_idx, ret_bd=False):
-    global fitness, interactor
-    interactor.timer_lock.acquire()
+    global fitness
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt
@@ -491,17 +490,17 @@ def testlt(l, r, node_idx, ret_bd=False):
                 bds[index] = bd
             else:
                 fitness_i = al + (1 - 1.001 ** (-bd))
+                if direction == 0:
+                    fitness_i += k
                 if fitness_i < fitness[index]:
                     fitness[index] = fitness_i
-    interactor.timer_lock.release()
     if not ret_bd:
         return l < r
     else:
         return l < r, als, bds
 
 def testand(l_info, r_info, node_idx):
-    global fitness, interactor
-    interactor.timer_lock.acquire()
+    global fitness
     l, l_als, l_bds = l_info
     r, r_als, r_bds = r_info
     for index in range(target_cnt):
@@ -518,12 +517,10 @@ def testand(l_info, r_info, node_idx):
             fitness_i = l_als[index] + (1 - 1.001 ** (-bd))
             if fitness_i < fitness[index]:
                 fitness[index] = fitness_i
-    interactor.timer_lock.release()
     return l and r
 
 def testor(l_info, r_info, node_idx):
-    global fitness, interactor
-    interactor.timer_lock.acquire()
+    global fitness
     l, l_als, l_bds = l_info
     r, r_als, r_bds = r_info
     for index in range(target_cnt):
@@ -540,7 +537,6 @@ def testor(l_info, r_info, node_idx):
             fitness_i = l_als[index] + (1 - 1.001 ** (-bd))
             if fitness_i < fitness[index]:
                 fitness[index] = fitness_i
-    interactor.timer_lock.release()
     return l or r
 
 '''
@@ -567,10 +563,6 @@ sys.path.append(os.path.join(parent_dir, 'simulator'))'''
         else:
             break
 
-    load_board_node = f'''
-machine.load_board("{filename}")'''
-    initial_tree.body.append(ast.parse(load_board_node))
-
     initial_content = ast.unparse(initial_tree)
 
     for index2, node in enumerate(tree.body[index:]):
@@ -593,6 +585,7 @@ machine.load_board("{filename}")'''
     loop_content = ast.unparse(loop_tree)
 
     setup_content = f'''
+machine.load_board("{filename}")
 target_cnt = {len(nodes.target_ids)}
 target_ids = {nodes.target_ids}
 target_types = {nodes.target_types}

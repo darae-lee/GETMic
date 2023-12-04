@@ -1,0 +1,35 @@
+
+Coverage Result for Button.py (with ui_length = 3, trial_limit = 500)
+    - Trials needed to achieve 100% coverage : 1
+    - Max Coverage % until 500 trials: 100.00%
+    - Total Execution Time: 0.13364 sec
+    - Best seq: [[1577, 1722], [165, 1060], [1990, 1658]]
+        
+
+Coverage Result for IfStatementConditional.py (with ui_length = 3, trial_limit = 500)
+    - Trials needed to achieve 100% coverage : 1
+    - Max Coverage % until 500 trials: 100.00%
+    - Total Execution Time: 0.13579 sec
+    - Best seq: [[1577, 1722], [165, 1060], [1990, 1658]]
+        
+
+Coverage Result for StateChangeDetection.py (with ui_length = 3, trial_limit = 500)
+    - Trials needed to achieve 100% coverage : 8
+    - Max Coverage % until 500 trials: 100.00%
+    - Total Execution Time: 0.66471 sec
+    - Best seq: [[583, 1834], [373, 329], [1310, 2004]]
+        
+
+Coverage Result for SwitchCase.py (with ui_length = 3, trial_limit = 500)
+    - Trials needed to achieve 100% coverage : 230
+    - Max Coverage % until 500 trials: 100.00%
+    - Total Execution Time: 18.54501 sec
+    - Best seq: [[2019, 1462], [1179, 1372], [485, 1674]]
+        
+
+Coverage Result for LoveOMeter.py (with ui_length = 10, trial_limit = 500)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 500 trials: 92.86%
+    - Total Execution Time: 61.44010 sec
+    - Best seq: [[896, 185], [303, 109], [509, 772], [490, 1602], [374, 1516], [475, 149], [88, 797], [757, 507], [1962, 862], [250, 93]]
+        
