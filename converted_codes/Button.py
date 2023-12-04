@@ -25,6 +25,6 @@ def exec_code(random_interaction_seq: list):
             p1.value(1)
         else:
             p1.value(0)
-        utime.sleep(1)
+        utime.sleep(1/1000)
         if not interactor.is_alive():
             break

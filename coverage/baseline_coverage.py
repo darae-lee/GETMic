@@ -45,13 +45,13 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
         cov.json_report(outfile="coverage/report.json")
         with open("coverage/report.json", 'r') as file:
             json_data = json.load(file)
-        summary = json_data["files"][f"converted_codes/{filename}"]["summary"]
+        summary = json_data["files"][f"converted_codes\\{filename}"]["summary"]
         # print(summary)
         curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
         os.remove("coverage/report.json")
 
         print(f"Trial {trials}: {curr_coverage}%")
-        # cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
+        cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
         cov.erase()  # Initialize coverage
         max_coverage = max(curr_coverage, max_coverage)
         trials += 1

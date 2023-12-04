@@ -31,7 +31,7 @@ def exec_code(random_interaction_seq: list):
                 print(buttonPushCounter)
             else:
                 print("off")
-            utime.sleep(50)
+            utime.sleep(50/1000)
         lastButtonState = buttonState
     
         if buttonPushCounter % 4 == 0:
@@ -39,6 +39,6 @@ def exec_code(random_interaction_seq: list):
         else:
             p1.value(0)
         
-        utime.sleep(1)
+        utime.sleep(1/1000)
         if not interactor.is_alive():
             break

@@ -34,6 +34,6 @@ def exec_code(random_interaction_seq: list):
         elif local_range == 3:
             print("bright")
         
-        utime.sleep(2)
+        utime.sleep(2/1000)
         if not interactor.is_alive():
             break

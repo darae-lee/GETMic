@@ -1,30 +1,23 @@
-import grammar
 import random
 import argparse
 import ast
+import coverage
+import sys
 import os
+import json
+import time
 
 class codeNodes:
     def __init__(self):
         self.target_ids = []
         self.target_types = []
         self.infos = [] #(target_ids, target_types)
-        self.values = [] #(al, bd)
 
     def travel_and_update(self, node, prev_ids, prev_types):
         my_idx = id(node)
 
         if isinstance(node, ast.If) or isinstance(node, ast.While):
             reverse = False
-            # if문 안의 if
-            # if isinstance(node.test, ast.IfExp):
-            #     test_true = eval(ast.unparse(node.test.body))
-            #     test_false = eval(ast.unparse(node.test.orelse))
-            #     if (bool(test_true) is True) and (bool(test_false) is False):
-            #         setattr(node, 'test', node.test.test)
-            #     elif (bool(test_true) is True) and (bool(test_false) is False):
-            #         reverse = True
-            #         setattr(node, 'test', node.test.test)
 
             # Condition stmt of If
             if isinstance(node.test, ast.Compare):
@@ -132,7 +125,6 @@ class codeNodes:
                     self.infos.append(info)
                     self.target_ids.append(info[0])
                     self.target_types.append(info[1])
-                    self.values.append([1000,1000])
         return node
 
 '''
@@ -140,55 +132,35 @@ for GA
 '''
 
 class Evaluator:
-    def __init__(self, setup_content, loop_content, productions, loop_count, local_count):
+    def __init__(self, setup_content, loop_content):
         self.setup_content = setup_content
         self.loop_content = loop_content
-        self.productions = productions
-        self.productions_length = len(productions)
-        self.loop_count = loop_count
-        self.local_count = local_count
-
-    def get_phenotype(self, codon: int) -> str:
-        return self.productions[codon % self.productions_length]
 
     def fill_user_interactions(self, codons: list):
-        interactions = [self.get_phenotype(codon) for codon in codons]
-        idx = 0  # idx of interactions
-        new_lines = []
-        # start_insert = False
-        lines = self.loop_content.split("\n")
-        for line in lines:
-            # if start_insert:
-            if line.strip().startswith("else") or line.strip().startswith("elif"):
-                new_lines.append(indentation + interactions[idx] + '\n')
-                idx += 1
-            else:
-                indentation = line[:len(line) - len(line.lstrip())]
-                new_lines.append(indentation + interactions[idx] + '\n')
-                idx += 1
-            # elif line.strip().startswith("if True"):
-            #     start_insert = True
-            new_lines.append(line + '\n')
-        last_line = lines[-1]
-        indentation = last_line[:len(last_line) - len(last_line.lstrip())]
-        new_lines.append(indentation + interactions[idx] + '\n')
-        return "".join(new_lines)
+        loop_content_lines = self.loop_content.strip().split('\n')
+        interaction_code = f"""
+interaction_seq = {codons}
+interactor = machine.UserInteract(interaction_seq)
+interactor.start()
+
+while True:"""
+        for line in loop_content_lines:
+            interaction_code += f"""
+    {line}"""
+        interaction_code += """
+    if not interactor.is_alive():
+        break"""
+        return interaction_code
 
     def evaluate(self, codons):
         exec(self.setup_content, globals())
 
+        global fitness
         fitness = [float('inf')] * target_cnt
-        for loop_idx in range(self.loop_count):
-            local_codons = codons[loop_idx*self.local_count : (loop_idx+1)*self.local_count]
-            local_code = self.fill_user_interactions(local_codons)
-            
-            exec(local_code, globals())
 
-            for index, f in enumerate(values):
-                al, bd = f[0], f[1]
-                fitness_i = al + (1 - 1.001 ** (-bd))
-                if fitness_i < fitness[index]:
-                    fitness[index] = fitness_i
+        loop_code = self.fill_user_interactions(codons)
+    
+        exec(loop_code, globals())
 
         return sum([max(0, f) for f in fitness])
 
@@ -204,8 +176,8 @@ class Solution:
 
 def random_codons(codons_length, num_range) -> list:
     sol = []
-    for i in range(codons_length):
-        sol.append(random.randint(num_range[0], num_range[1]))
+    for _ in range(codons_length):
+        sol.append((random.randint(num_range[0], num_range[1]), random.randint(num_range[0], num_range[1])))
     return sol
 
 
@@ -227,7 +199,7 @@ def crossover(rate, p1, p2):
 def mutate(rate, s, num_range):
     for i in range(len(s.sol)):
         if random.random() < rate:
-            s.sol = s.sol[:i] + [random.randint(num_range[0], num_range[1])] + s.sol[i + 1:]
+            s.sol = s.sol[:i] + [(random.randint(num_range[0], num_range[1]), random.randint(num_range[0], num_range[1]))] + s.sol[i + 1:]
     return s
 
 
@@ -236,23 +208,64 @@ def select(k, population):
     participants = random.sample(population, k)
     return sorted(participants, key=lambda x: x.fitness, reverse=False)[0]
 
+def calculate_coverage(filename, solution):
+    if filename == "Button.py":
+        from converted_codes import Button
+        exec_code = Button.exec_code
+    elif filename == "IfStatementConditional.py":
+        from converted_codes import IfStatementConditional
+        exec_code = IfStatementConditional.exec_code
+    elif filename == "LoveOMeter.py":
+        from converted_codes import LoveOMeter
+        exec_code = LoveOMeter.exec_code
+    elif filename == "StateChangeDetection.py":
+        from converted_codes import StateChangeDetection
+        exec_code = StateChangeDetection.exec_code
+    elif filename == "SwitchCase.py":
+        from converted_codes import SwitchCase
+        exec_code = SwitchCase.exec_code
+    else:  # Defualt: button
+        from converted_codes import Button
+        exec_code = Button.exec_code
 
-def ga(loop_number, space_number, evaluator):
+    cov = coverage.Coverage()
+
+    cov.start()
+    exec_code(solution.sol)
+    cov.stop()
+
+    # Check current coverage
+    cov.json_report(outfile="ga/report.json")
+    with open("ga/report.json", 'r') as file:
+        json_data = json.load(file)
+    summary = json_data["files"][f"converted_codes\\{filename}"]["summary"]
+
+    curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
+    os.remove("ga/report.json")
+    cov.erase()
+
+    return curr_coverage
+
+def ga(filename, evaluator, ui_length, pp_size):
     population = []
-    MAX_NUM = 2048  # TODO: 최대값 정하기
-    for i in range(100):
-        s = Solution(random_codons(loop_number*space_number, (0, MAX_NUM)))
+    MAX_NUM = 2048
+    for _ in range(pp_size):
+        s = Solution(random_codons(ui_length, (0, MAX_NUM)))
         s.fitness = evaluator.evaluate(s.sol)
         population.append(s)
+        if s.fitness == 0:
+            break
     count = 0
-    budget = 100  # number of generations
+    budget = 5  # number of generations
     best_solution = population[0]
+    print(f"best sol in initial population: {best_solution}")
+
     while count < budget and best_solution.fitness > 0:
         next_gen = []
         while len(next_gen) < len(population):
             # selecting the fitter parents
-            p1 = select(20, population)
-            p2 = select(20, population)
+            p1 = select(int(pp_size*0.2), population)
+            p2 = select(int(pp_size*0.2), population)
 
             # crossover to generate a pair of offsprings
             o1, o2 = crossover(0.9, p1, p2)
@@ -268,198 +281,209 @@ def ga(loop_number, space_number, evaluator):
         # now we have the full next gen
         population.extend(next_gen)
         population = sorted(population, key=lambda x: x.fitness, reverse=False)
-        population = population[:50]  # regardless of generation, keep top 50s
+        population = population[:pp_size]
         best_solution = population[0]
+        print(count, best_solution)
         count += 1
-    return best_solution
+
+    curr_coverage = calculate_coverage(filename, best_solution)
+
+    return best_solution, count, curr_coverage
 
 
 '''
 branch condition functions
 '''
-k = 1
+k = 0.00001
 
 def testeq(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
-        al, bd = values[index]
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
             if direction == 0:
                 bd = abs(l - r)
             else:
                 bd = -abs(l - r)
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+
+    if not ret_bd:
         return l == r
     else:
-        return l == r, bds
+        return l == r, als, bds
 
 def testin(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
             dists = [abs(l - ref) for ref in r]
             if direction == 0:
                 bd = min(dists)
             else:
                 bd = -min(dists)
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l in r
     else:
-        return l in r, bds
+        return l in r, als, bds
 
 def testne(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
             if direction == 0:
                 bd = -abs(l - r)
             else:
                 bd = abs(l - r)
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l != r
     else:
-        return l != r, bds
+        return l != r, als, bds
 
 def testgte(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
             if direction == 0:
                 bd = r - l + k
             else:
                 bd = l - r + k
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l >= r
     else:
-        return l >= r, bds
+        return l >= r, als, bds
 
 def testlte(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
             if direction == 0:
                 bd = l - r + k
             else:
                 bd = r - l + k
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l <= r
     else:
-        return l <= r, bds
+        return l <= r, als, bds
 
 def testgt(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
             if direction == 0:
                 bd = r - l + k
             else:
                 bd = l - r + k
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l > r
     else:
-        return l > r, bds
+        return l > r, als, bds
 
 def testlt(l, r, node_idx, ret_bd=False):
-    global values
-    if not ret_bd:
+    global fitness
+    if ret_bd:
+        als = [0] * target_cnt
         bds = [0] * target_cnt
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
             direction = target_types[index][cur_pos]
             al = len(target_ids[index]) - cur_pos - 1
-            values[index][0] = al
             if direction == 0:
                 bd = l - r + k
             else:
                 bd = r - l + k
             if ret_bd:
+                als[index] = al
                 bds[index] = bd
             else:
-                values[index][1] = bd
-        else:
-            values[index][1] = bd
-    if ret_bd:
+                fitness_i = al + (1 - 1.001 ** (-bd))
+                if fitness_i < fitness[index]:
+                    fitness[index] = fitness_i
+    if not ret_bd:
         return l < r
     else:
-        return l < r, bds
+        return l < r, als, bds
 
 def testand(l_info, r_info, node_idx):
-    global values
-    l, l_bds = l_info
-    r, r_bds = r_info
+    global fitness
+    l, l_als, l_bds = l_info
+    r, r_als, r_bds = r_info
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -471,15 +495,15 @@ def testand(l_info, r_info, node_idx):
             else:
                 # at least one false
                 bd = min(l_bds[index], r_bds[index])
-            values[index][1] = bd
-            return l and r
-        else:
-            return l and r
+            fitness_i = l_als[index] + (1 - 1.001 ** (-bd))
+            if fitness_i < fitness[index]:
+                fitness[index] = fitness_i
+    return l and r
 
 def testor(l_info, r_info, node_idx):
-    global values
-    l, l_bds = l_info
-    r, r_bds = r_info
+    global fitness
+    l, l_als, l_bds = l_info
+    r, r_als, r_bds = r_info
     for index in range(target_cnt):
         if node_idx in target_ids[index]:
             cur_pos = target_ids[index].index(node_idx)
@@ -491,96 +515,40 @@ def testor(l_info, r_info, node_idx):
             else:
                 # should be all false
                 bd = max(l_bds[index], 0) + max(r_bds[index], 0)
-            values[index][1] = bd
-            return l or r
-        else:
-            return l or r
-
-
-def erase_sleep(code):
-    lines = []
-    for line in code.split("\n"):
-        if line == "import utime" or line.strip().startswith("utime.sleep"):
-            continue
-        else:
-            lines.append(line)
-    return "\n".join(lines) + "\n"
+            fitness_i = l_als[index] + (1 - 1.001 ** (-bd))
+            if fitness_i < fitness[index]:
+                fitness[index] = fitness_i
+    return l or r
 
 '''
-Count # of space where user interaction can be inserted
+Seperate the whold code -> initial / setup / loop
+Get GA targets
 '''
-def count_space(code):
-    inside_while = False
-    inside_comment = False
-    space_count = 0
-    for line in code.split("\n"):
-        if inside_while:
-            stripped_line = line.strip()
-            if stripped_line.startswith("'''") or stripped_line.startswith('"""'):
-                inside_comment = not inside_comment
-            if not (stripped_line.startswith('#') or stripped_line == '') and not inside_comment:
-                space_count += 1
-        elif line.strip().startswith("while True"):
-            inside_while = 1
-            continue
-    space_count += 1
-    return space_count
-
-# usage: python sbst.py target_codes/{}.py
-if __name__ == "__main__":
-    global values
-    global al, bd
-    random.seed(0)
-    parser = argparse.ArgumentParser()
-    parser.add_argument("target", help="the target python file to generate unit tests for")
-    args = parser.parse_args()
-
-    with open(args.target, "r") as f:
-        code = f.read()
-    
-    code = erase_sleep(code)  # sleep하는 코드 지우기
-    space_number = count_space(code)  # codons의 길이 계산
+def seperate_code(filename, code):
     tree = ast.parse(code)
 
-    '''
-    Get targets & Testcase generation for each target with GA
-    '''
-
-    # setup, loop 분리
     initial_tree = ast.parse("")
     setup_tree = ast.parse("")
     loop_tree = ast.parse("")
+    
+    initial_settings = f'''
+import os
+import sys
+parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(os.path.join(parent_dir, 'simulator'))'''
+    initial_tree.body.append(ast.parse(initial_settings))
 
     for index, node in enumerate(tree.body):
         if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
             initial_tree.body.append(node)
         else:
             break
-    
-    initial_tree.body.append(ast.Import(names=[ast.alias(name='machine')]))
-    initial_tree.body.append(ast.ImportFrom(module='machine', names=[ast.alias(name='UserInteract')], level=0))
-    load_board_node = ast.Expr(
-                        value=ast.Call(
-                            func=ast.Attribute(
-                                value=ast.Name(id='machine', ctx=ast.Load()),
-                                attr='load_board',
-                                ctx=ast.Load()),
-                            args=[
-                                ast.Name(id="\""+args.target+"\"", ctx=ast.Load())],
-                            keywords=[]))
-    
-    interactor_node = ast.Assign(
-                        targets=[
-                            ast.Name(id='interactor', ctx=ast.Store())],
-                        value=ast.Call(
-                            func=ast.Name(id='UserInteract', ctx=ast.Load()),
-                            args=[],
-                            keywords=[])
-                        )
-    ast.fix_missing_locations(load_board_node)
-    initial_tree.body.append(load_board_node)
-    ast.fix_missing_locations(interactor_node)
-    initial_tree.body.append(interactor_node)
+
+    load_board_node = f'''
+machine.load_board("{filename}")'''
+    initial_tree.body.append(ast.parse(load_board_node))
+
+    initial_content = ast.unparse(initial_tree)
 
     for index2, node in enumerate(tree.body[index:]):
         if isinstance(node, ast.While):
@@ -599,11 +567,7 @@ if __name__ == "__main__":
             ast.copy_location(inner_node, loop_tree)
             loop_tree.body.append(inner_node)
 
-    print(f"nodes.infos: {nodes.infos}")
-    print(f"nodes.target_ids: {nodes.target_ids}")
-    print(f"nodes.target_types: {nodes.target_types}")
-    print(f"nodes.values: {nodes.values}")
-    values = nodes.values # list of [al, bd]
+    loop_content = ast.unparse(loop_tree)
 
     setup_content = f'''
 target_cnt = {len(nodes.target_ids)}
@@ -612,35 +576,48 @@ target_types = {nodes.target_types}
 '''
     setup_content += ast.unparse(setup_tree)
 
-    initial_content = ast.unparse(initial_tree)
-    loop_content = ast.unparse(loop_tree)
+    return initial_content, setup_content, loop_content
 
-    #
+# usage: python ga/sbst.py {filename} --p {pp_size} --l {ui_length}
+if __name__ == "__main__":
+    parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+    sys.path.append(parent_dir)
+
+    random.seed(21)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filename", help="the python file to check baseline coverage")
+    parser.add_argument("--p", type=int, help="GA population size")
+    parser.add_argument("--l", type=int, help="user interaction sequence length to randomly generate")
+    args = parser.parse_args()
+
+    with open(f"target_codes/{args.filename}", "r") as f:
+        code = f.read()
+    
+    initial_content, setup_content, loop_content = seperate_code(args.filename, code)
+
+    # save targets and target_cnt(# of target) as global variables
     exec(initial_content, globals())
-
-    exec(setup_content, globals())
-
-    # 가능한 user interaction 가져오기
-    user_interactions = interactor.codes
-    interaction_cnt = len(user_interactions)
-    productions = [f"interactor.interact({num})" for num in range(interaction_cnt)]
-    loop_count = 5
-    print("user interaction cnt: ", interaction_cnt)
-    print("------------")
-    print("setup content: ", setup_content)
-    print("------------")
-    print("loop content: ", ast.unparse(loop_tree))
-    print("------------")
-    print("productions: ", productions)
-    print("============")
 
     evaluator = Evaluator(
                     setup_content=setup_content,
-                    loop_content=loop_content,
-                    productions=productions,
-                    loop_count=loop_count, # loop 몇 번 돌건지
-                    local_count=space_number, # local action 개수
+                    loop_content=loop_content
     )
+
+    start = time.time()
+    best_solution, generations, max_coverage = ga(args.filename, evaluator, args.l, args.p)
+    end = time.time()
     
-    result = ga(loop_count, space_number, evaluator)
-    print("result: ", result, "done.")
+    print("result: ", best_solution, "done.")
+
+    # save coverage
+    content_to_write = f'''
+Coverage Result for {args.filename} (with ui_length = {args.l}, population_size = {args.p})
+    - Generations needed to achieve 100% coverage : { "-" if generations==100 else generations}
+    - Max Coverage % until 100 generations: {max_coverage:.2f}%
+    - Total Execution Time: {end - start:.5f} sec
+        
+'''
+    with open("ga/result.txt", 'a') as file:
+        file.write(content_to_write)
+
+    print(content_to_write)
