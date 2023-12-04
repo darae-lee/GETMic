@@ -31,10 +31,16 @@ class UserInteract(threading.Thread):
     def __init__(self, seq):
         threading.Thread.__init__(self)
         self.seq = seq
+        self.timer_lock = threading
     def run(self):
         for o, a in self.seq:
+            self.timer_lock.acquire()
             self.interact(o, a)
-            utime.sleep(10)
+            self.timer_lock.release()
+            for i in range(100):
+                self.timer_lock.acquire()
+                utime.sleep(1/10)
+                self.timer_lock.release()
         # print("done")
     def interact(self, object_code: int, action_code: int):
         HW_board.userinteraction(object_code, action_code)
