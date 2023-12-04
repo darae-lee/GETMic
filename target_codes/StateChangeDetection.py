@@ -21,7 +21,7 @@ while True:
             print(buttonPushCounter)
         else:
             print("off")
-        utime.sleep(50)
+        utime.sleep(50/1000)
     lastButtonState = buttonState
 
     if buttonPushCounter % 4 == 0:
@@ -29,4 +29,4 @@ while True:
     else:
         p1.value(0)
     
-    utime.sleep(1)
+    utime.sleep(1/1000)

@@ -15,4 +15,4 @@ while True:
         p1.value(1)
     else:
         p1.value(0)
-    utime.sleep(1)
+    utime.sleep(1/1000)

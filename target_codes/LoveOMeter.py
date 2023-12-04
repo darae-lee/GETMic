@@ -43,4 +43,4 @@ while True:
         pins[0].value(1)
         pins[1].value(1)
         pins[2].value(1)
-    utime.sleep(2)
+    utime.sleep(2/1000)

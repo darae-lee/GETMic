@@ -17,4 +17,4 @@ while True:
     else:
         p1.value(0)
     print(analogValue)
-    utime.sleep(2)
+    utime.sleep(2/1000)
