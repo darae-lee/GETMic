@@ -2,11 +2,12 @@ import simulator
 import utime
 import threading
 
-HW_board = simulator.Board(n=14)
+HW_board = None
 lock = threading.Lock()
 
 def load_board(path_name):
     global HW_board
+    HW_board = simulator.Board(n=14)
     if "\\" in path_name:
         name = path_name.split("\\")[-1]
     else:
@@ -34,6 +35,10 @@ class UserInteract(threading.Thread):
         self.seq = seq
         self.timer_lock = lock
     def run(self):
+        for i in range(200):
+            self.timer_lock.acquire()
+            utime.sleep(1/10)
+            self.timer_lock.release()
         for o, a in self.seq:
             self.timer_lock.acquire()
             self.interact(o, a)
@@ -73,5 +78,6 @@ class Pin:
             # writing
             ret_val = HW_board.digitalwirte(self.pin_number, value)
         lock.release()
+        # print(ret_val)
         return ret_val
 

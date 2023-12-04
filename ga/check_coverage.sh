@@ -11,7 +11,7 @@ fi
 python ga/sbst.py Button.py --p 10 --l 4
 python ga/sbst.py IfStatementConditional.py --p 10 --l 4
 python ga/sbst.py StateChangeDetection.py --p 10 --l 6
-python ga/sbst.py SwitchCase.py --p 10 --l 4
-python ga/sbst.py LoveOMeter.py --p 10 --l 8
+python ga/sbst.py SwitchCase.py --p 10 --l 6
+python ga/sbst.py LoveOMeter.py --p 10 --l 6
 
 echo "Done calculating GA coverage!"
