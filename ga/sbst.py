@@ -242,6 +242,8 @@ def calculate_coverage(filename, solution):
 
     curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
     os.remove("ga/report.json")
+    # if abs(curr_coverage - 71.43) < 0.01:
+    #     cov.html_report()
     cov.erase()
 
     return curr_coverage
@@ -384,7 +386,7 @@ def testne(l, r, node_idx, ret_bd=False):
 
 def testgte(l, r, node_idx, ret_bd=False):
     global fitness, interactor
-    interactor.timer_lock.acquire()s
+    interactor.timer_lock.acquire()
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt
@@ -404,8 +406,7 @@ def testgte(l, r, node_idx, ret_bd=False):
                 fitness_i = al + (1 - 1.001 ** (-bd))
                 if fitness_i < fitness[index]:
                     fitness[index] = fitness_i
-    interactor.timer_lock.release(, interactor
-    interactor.timer_lock.acquire())
+    interactor.timer_lock.release()
     if not ret_bd:
         return l >= r
     else:
@@ -413,7 +414,7 @@ def testgte(l, r, node_idx, ret_bd=False):
 
 def testlte(l, r, node_idx, ret_bd=False):
     global fitness, interactor
-    interactor.timer_lock.acquire()s
+    interactor.timer_lock.acquire()
     if ret_bd:
         als = [0] * target_cnt
         bds = [0] * target_cnt

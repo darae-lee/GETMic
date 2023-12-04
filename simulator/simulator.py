@@ -166,9 +166,10 @@ class AnalogComponent(Component):
     def __init__(self, left, right, board):
         super().__init__(left, right) 
         # if you push it, the state becomes high
+        # random.seed(0)
         self.board = board
         self.max_value = 1024
-        self.state = random.randrange(0, self.max_value)
+        self.state = 0
         self.updategrammar()
 
     def updategrammar(self):

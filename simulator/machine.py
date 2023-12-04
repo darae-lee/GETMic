@@ -3,6 +3,7 @@ import utime
 import threading
 
 HW_board = simulator.Board(n=14)
+lock = threading.Lock()
 
 def load_board(path_name):
     global HW_board
@@ -31,13 +32,13 @@ class UserInteract(threading.Thread):
     def __init__(self, seq):
         threading.Thread.__init__(self)
         self.seq = seq
-        self.timer_lock = threading
+        self.timer_lock = lock
     def run(self):
         for o, a in self.seq:
             self.timer_lock.acquire()
             self.interact(o, a)
             self.timer_lock.release()
-            for i in range(100):
+            for i in range(200):
                 self.timer_lock.acquire()
                 utime.sleep(1/10)
                 self.timer_lock.release()
@@ -63,10 +64,14 @@ class Pin:
             HW_board.pinmode(pin_number, mode)
         self.pin_number = pin_number
     def value(self, value=None):
+        global lock
+        lock.acquire()
         if value == None:
             # reading
-            return HW_board.digitalread(self.pin_number)
+            ret_val = HW_board.digitalread(self.pin_number)
         else:
             # writing
-            return HW_board.digitalwirte(self.pin_number, value)
+            ret_val = HW_board.digitalwirte(self.pin_number, value)
+        lock.release()
+        return ret_val
 
