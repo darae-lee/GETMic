@@ -37,7 +37,7 @@ while True:
             pins[1].value(0)
             pins[2].value(0)
         else:
-            print("Button shooluld be pressed when temperature is low")
+            print("It's too cold! Press the button!")
     elif temperature >= baselineTemp + 2 and temperature < baselineTemp + 4:
         pins[0].value(1)
         pins[1].value(0)
@@ -47,7 +47,10 @@ while True:
         pins[1].value(1)
         pins[2].value(0)
     elif temperature >= baselineTemp + 6:
-        pins[0].value(1)
-        pins[1].value(1)
-        pins[2].value(1)
+        if buttonState == 0:
+            pins[0].value(1)
+            pins[1].value(1)
+            pins[2].value(1)
+        else:
+            print("It's too hot! Unpress the button!")
     utime.sleep(2 / 1000)

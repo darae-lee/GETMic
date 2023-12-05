@@ -18,6 +18,7 @@ fi
 ##    python ga/sbst.py SegmentDisplay.py --p 10 --l 3 --r $i
 #  done
 
-python ga/sbst.py LoveOMeter_button.py --p 20 --l 20 --r 0
+# python ga/sbst.py WarmButton.py --p 20 --l 20 --r 0
+python ga/sbst.py ButtonCounter.py --p 20 --l 20 --r 0
 
 echo "Done calculating GA coverage!"

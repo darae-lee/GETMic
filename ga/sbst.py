@@ -230,9 +230,12 @@ def calculate_coverage(filename, solution):
     elif filename == "SegmentDisplay.py":
         from converted_codes import SegmentDisplay
         exec_code = SegmentDisplay.exec_code
-    elif filename == "LoveOMeter_button.py":
-        from converted_codes import LoveOMeter_button
-        exec_code = LoveOMeter_button.exec_code
+    elif filename == "WarmButton.py":
+        from converted_codes import WarmButton
+        exec_code = WarmButton.exec_code
+    elif filename == "ButtonCounter.py":
+        from converted_codes import ButtonCounter
+        exec_code = ButtonCounter.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code
@@ -259,7 +262,7 @@ def calculate_coverage(filename, solution):
     curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
     os.remove("ga/report.json")
 
-    # cov.html_report(directory=f"ga/html_{curr_coverage}")  # for inspection
+    cov.html_report(directory=f"ga/html_{curr_coverage}")  # for inspection
     cov.erase()
 
     return curr_coverage
