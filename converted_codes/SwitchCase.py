@@ -6,20 +6,20 @@ import machine  # pragma: no cover
 import utime  # pragma: no cover
 
 def exec_code(random_interaction_seq: list):
-    machine.load_board(__file__)
+    machine.load_board(__file__)  # pragma: no cover
     
-    analogPin = 0
-    sensorMin = 0
-    sensorMax = 600
+    analogPin = 0  # pragma: no cover
+    sensorMin = 0  # pragma: no cover
+    sensorMax = 600  # pragma: no cover
     
-    new_min = 0
-    new_max = 3
+    new_min = 0  # pragma: no cover
+    new_max = 3  # pragma: no cover
     
-    adc_pin = machine.Pin(analogPin)
-    adc = machine.ADC(adc_pin)
+    adc_pin = machine.Pin(analogPin)  # pragma: no cover
+    adc = machine.ADC(adc_pin)  # pragma: no cover
     
-    interactor = machine.UserInteract(random_interaction_seq)
-    interactor.start()
+    interactor = machine.UserInteract(random_interaction_seq)  # pragma: no cover
+    interactor.start()  # pragma: no cover
 
     while True:
         sensorReading = adc.read_u16()

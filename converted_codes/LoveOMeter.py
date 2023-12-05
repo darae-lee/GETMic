@@ -6,22 +6,22 @@ import machine  # pragma: no cover
 import utime  # pragma: no cover
 
 def exec_code(random_interaction_seq: list):
-    machine.load_board(__file__)
+    machine.load_board(__file__)  # pragma: no cover
     
-    sensorPin = 0
-    baselineTemp = 20.0
+    sensorPin = 0  # pragma: no cover
+    baselineTemp = 20.0  # pragma: no cover
     
-    adc_pin = machine.Pin(sensorPin)
-    adc = machine.ADC(adc_pin)
+    adc_pin = machine.Pin(sensorPin)  # pragma: no cover
+    adc = machine.ADC(adc_pin)  # pragma: no cover
     
-    pins = []
-    for i in range(2, 5):
-        pin = machine.Pin(i, machine.Pin.OUT)
-        pin.value(0)
-        pins.append(pin)
+    pins = []  # pragma: no cover
+    for i in range(2, 5):  # pragma: no cover
+        pin = machine.Pin(i, machine.Pin.OUT)  # pragma: no cover
+        pin.value(0)  # pragma: no cover
+        pins.append(pin)  # pragma: no cover
     
-    interactor = machine.UserInteract(random_interaction_seq)
-    interactor.start()
+    interactor = machine.UserInteract(random_interaction_seq)  # pragma: no cover
+    interactor.start()  # pragma: no cover
 
     while True:
         sensorVal = adc.read_u16()

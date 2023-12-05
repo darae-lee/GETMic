@@ -21,17 +21,17 @@ def separate_code(code):
 
 
 def convert_import_code(code):
-    import_code = ["import os  # pragma: no cover\n",
-                   "import sys  # pragma: no cover\n",
-                   "parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover\n"
-                   "sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover\n"]
+    import_code = ["import os\n",
+                   "import sys\n",
+                   "parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))\n",
+                   "sys.path.append(os.path.join(parent_dir, 'simulator'))\n"]
     machine_flag = 0
     for line in code:
-        import_code.append(line.rstrip() + "  # pragma: no cover\n")
+        import_code.append(line)
         if line.strip() == "import machine":
             machine_flag = 1
     if machine_flag==0:
-        import_code.append("import machine  # pragma: no cover\n")
+        import_code.append("import machine\n")
     import_code.append("\n")
     return import_code
 
@@ -55,6 +55,16 @@ def convert_loop_code(code):
                       INDENT*3 + "break\n"])
     return loop_code
 
+def add_no_coverage(code):
+    no_cov_code = []
+    for line in code:
+        sline = line.strip()
+        if sline and not sline.startswith("def exec_code") and not sline.startswith("#"):
+            no_cov_code.append(line.rstrip() + "  # pragma: no cover\n")
+        else:
+            no_cov_code.append(line)
+    return no_cov_code
+
 
 def convert_code(code):
     import_end_lineno, loop_start_lineno = separate_code(code)
@@ -66,8 +76,9 @@ def convert_code(code):
     import_code = convert_import_code(code[:import_end_lineno + 1])
     setup_code = convert_setup_code(code[import_end_lineno + 1:loop_start_lineno])
     loop_code = convert_loop_code(code[loop_start_lineno:])
+    above_loop_code = add_no_coverage(import_code + setup_code)
 
-    return import_code + setup_code + loop_code
+    return above_loop_code + loop_code
 
 
 # usage: python simulator/convert_target_code.py target_codes/{}.py
