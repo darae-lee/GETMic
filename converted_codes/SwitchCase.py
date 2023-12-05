@@ -35,5 +35,5 @@ def exec_code(random_interaction_seq: list):
             print("bright")
         
         utime.sleep(2/1000)
-        if not interactor.is_alive():
+        if not interactor.is_alive():  # pragma: no cover
             break

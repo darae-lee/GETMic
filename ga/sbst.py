@@ -652,7 +652,7 @@ Coverage Result for {args.filename} (with ui_length = {args.l}, population_size 
     with open("ga/result.txt", 'a') as file:
         file.write(content_to_write)
 
-    with open("ga/result.csv", "a") as file:
+    with open(f"ga/result_{args.filename}.csv", "a") as file:
         csv_writer = csv.writer(file)
         csv_writer.writerow([args.filename, args.l, args.p, args.r, generations, max_coverage, end - start])
 
