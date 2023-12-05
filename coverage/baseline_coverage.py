@@ -5,6 +5,7 @@ import json
 import sys
 import os
 import time
+import platform
 
 
 def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
@@ -23,6 +24,9 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
     elif filename == "SwitchCase.py":
         from converted_codes import SwitchCase
         exec_code = SwitchCase.exec_code
+    elif filename == "SegmentDisplay.py":
+        from converted_codes import SegmentDisplay
+        exec_code = SegmentDisplay.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code
@@ -46,10 +50,17 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
         cov.json_report(outfile="coverage/report.json")
         with open("coverage/report.json", 'r') as file:
             json_data = json.load(file)
-        summary = json_data["files"][f"converted_codes\\{filename}"]["summary"]
+
+        system_name = platform.system()
+        if system_name == 'Darwin':
+            summary = json_data["files"][f"converted_codes/{filename}"]["summary"]
+        elif system_name == 'Windows':
+            summary = json_data["files"][f"converted_codes\\{filename}"]["summary"]
+        else:
+            NotImplementedError("Only Darwin & Windows..")
         # print(summary)
         curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
-        os.remove("coverage/report.json")
+        # os.remove("coverage/report.json")
 
         print(f"Trial {trials}: {curr_coverage}%")
         # cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
