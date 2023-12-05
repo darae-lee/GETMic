@@ -6,6 +6,7 @@ import sys
 import os
 import json
 import time
+import platform
 
 random.seed(0)
 
@@ -242,7 +243,14 @@ def calculate_coverage(filename, solution):
     cov.json_report(outfile="ga/report.json")
     with open("ga/report.json", 'r') as file:
         json_data = json.load(file)
-    summary = json_data["files"][f"converted_codes\\{filename}"]["summary"]
+
+    system_name = platform.system()
+    if system_name == 'Darwin':
+        summary = json_data["files"][f"converted_codes/{filename}"]["summary"]
+    elif system_name == 'Windows':
+        summary = json_data["files"][f"converted_codes\\{filename}"]["summary"]
+    else:
+        NotImplementedError("Only Darwin & Windows..")
 
     curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
     os.remove("ga/report.json")
