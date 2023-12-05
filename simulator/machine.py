@@ -32,7 +32,7 @@ def load_board(path_name):
     elif name == "LoveOMeter.py":
         tem = simulator.TemperatureSensor(HW_board.vcc, HW_board.pins[0], HW_board)
         for i in range(2, 5):
-            led = simulator.LED(HW_board.vcc, HW_board.pins[i])
+            led = simulator.LED(HW_board.gnd, HW_board.pins[i])
     elif name == "SwitchCase.py":
         photo = simulator.Photoresistor(HW_board.vcc, HW_board.pins[0], HW_board)
     elif name == 'SegmentDisplay.py':
