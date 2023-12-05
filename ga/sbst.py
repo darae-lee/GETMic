@@ -649,6 +649,7 @@ Coverage Result for {args.filename} (with ui_length = {args.l}, population_size 
     - Best Test Case: {best_solution}
         
 '''
+    print([args.filename, args.l, args.p, args.r, generations, max_coverage, end - start])
     with open("ga/result.txt", 'a') as file:
         file.write(content_to_write)
 
