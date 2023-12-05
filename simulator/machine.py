@@ -40,6 +40,11 @@ def load_board(path_name):
             led = simulator.LED(HW_board.gnd, HW_board.pins[i])
         led = simulator.LED(HW_board.gnd, HW_board.pins[0])
         btn = simulator.Button(HW_board.vcc, HW_board.pins[13], HW_board)
+    elif name == 'LoveOMeter_button.py':
+        tem = simulator.TemperatureSensor(HW_board.vcc, HW_board.pins[0], HW_board)
+        for i in range(2, 5):
+            led = simulator.LED(HW_board.gnd, HW_board.pins[i])
+        btn = simulator.Button(HW_board.vcc, HW_board.pins[1], HW_board)
 
 
 class UserInteract(threading.Thread):
@@ -48,12 +53,10 @@ class UserInteract(threading.Thread):
         self.seq = seq
         self.timer_lock = lock
     def run(self):
-        for i in range(10):
-            utime.sleep(1/10)
+        utime.sleep(1)
         for o, a in self.seq:
             self.interact(o, a)
-            for i in range(10):
-                utime.sleep(1/10)
+            utime.sleep(1)
     def interact(self, object_code: int, action_code: int):
         HW_board.userinteraction(object_code, action_code)
 

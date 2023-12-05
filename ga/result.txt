@@ -1,7 +1,70 @@
 
-Coverage Result for LoveOMeter.py (with ui_length = 10, population_size = 8)
-    - Generations needed to achieve 100% coverage : 18
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : -
+    - Max Coverage % until 100 generations: 90.32%
+    - Total Execution Time: 16.30695 sec
+    - Best Test Case: None do_nothing, set_value_154 Temperature sensor at pin0, set_value_397 Temperature sensor at pin0, None do_nothing, set_value_566 Temperature sensor at pin0, set_value_52 Temperature sensor at pin0, set_value_4 Temperature sensor at pin0, press BTN at pin1, set_value_163 Temperature sensor at pin0, None do_nothing with 0.0011940019535917612
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : 62
     - Max Coverage % until 100 generations: 100.00%
-    - Total Execution Time: 9.80442 sec
-    - Best Test Case: set_value_42 Temperature sensor at pin0, None do_nothing, set_value_150 Temperature sensor at pin0, set_value_829 Temperature sensor at pin0, set_value_154 Temperature sensor at pin0, None do_nothing, set_value_438 Temperature sensor at pin0, set_value_3 Temperature sensor at pin0, set_value_174 Temperature sensor at pin0, set_value_191 Temperature sensor at pin0 with 0
+    - Total Execution Time: 10.29964 sec
+    - Best Test Case: unpress BTN at pin1, set_value_80 Temperature sensor at pin0, press BTN at pin1, None do_nothing, set_value_534 Temperature sensor at pin0, set_value_155 Temperature sensor at pin0, set_value_150 Temperature sensor at pin0, None do_nothing, None do_nothing, set_value_262 Temperature sensor at pin0 with 0
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : 33
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 5.64041 sec
+    - Best Test Case: press BTN at pin1, press BTN at pin1, press BTN at pin1, unpress BTN at pin1, set_value_148 Temperature sensor at pin0, set_value_154 Temperature sensor at pin0, unpress BTN at pin1, None do_nothing, set_value_912 Temperature sensor at pin0, None do_nothing with 0
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : -
+    - Max Coverage % until 100 generations: 90.32%
+    - Total Execution Time: 16.13656 sec
+    - Best Test Case: press BTN at pin1, set_value_252 Temperature sensor at pin0, None do_nothing, set_value_54 Temperature sensor at pin0, set_value_224 Temperature sensor at pin0, unpress BTN at pin1, None do_nothing, unpress BTN at pin1, unpress BTN at pin1, set_value_155 Temperature sensor at pin0 with 0.0016813375795013963
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : -
+    - Max Coverage % until 100 generations: 90.32%
+    - Total Execution Time: 16.38259 sec
+    - Best Test Case: press BTN at pin1, set_value_156 Temperature sensor at pin0, set_value_824 Temperature sensor at pin0, None do_nothing, set_value_39 Temperature sensor at pin0, press BTN at pin1, set_value_148 Temperature sensor at pin0, set_value_831 Temperature sensor at pin0, None do_nothing, None do_nothing with 0.00017177446477567582
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : 67
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 11.11016 sec
+    - Best Test Case: press BTN at pin1, unpress BTN at pin1, set_value_134 Temperature sensor at pin0, set_value_156 Temperature sensor at pin0, None do_nothing, None do_nothing, None do_nothing, set_value_149 Temperature sensor at pin0, unpress BTN at pin1, set_value_153 Temperature sensor at pin0 with 0
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : -
+    - Max Coverage % until 100 generations: 90.32%
+    - Total Execution Time: 16.45519 sec
+    - Best Test Case: None do_nothing, None do_nothing, press BTN at pin1, None do_nothing, unpress BTN at pin1, set_value_213 Temperature sensor at pin0, set_value_41 Temperature sensor at pin0, set_value_280 Temperature sensor at pin0, set_value_154 Temperature sensor at pin0, None do_nothing with 0.0011940019535917612
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : -
+    - Max Coverage % until 100 generations: 90.32%
+    - Total Execution Time: 16.45111 sec
+    - Best Test Case: None do_nothing, None do_nothing, press BTN at pin1, None do_nothing, None do_nothing, unpress BTN at pin1, set_value_153 Temperature sensor at pin0, set_value_371 Temperature sensor at pin0, press BTN at pin1, None do_nothing with 0.0007064284316863345
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : -
+    - Max Coverage % until 100 generations: 90.32%
+    - Total Execution Time: 16.58906 sec
+    - Best Test Case: press BTN at pin1, set_value_658 Temperature sensor at pin0, set_value_477 Temperature sensor at pin0, None do_nothing, unpress BTN at pin1, press BTN at pin1, set_value_149 Temperature sensor at pin0, set_value_1014 Temperature sensor at pin0, None do_nothing, set_value_158 Temperature sensor at pin0 with 0.0011472052201123573
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 10, population_size = 10)
+    - Generations needed to achieve 100% coverage : 37
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 6.24100 sec
+    - Best Test Case: set_value_769 Temperature sensor at pin0, set_value_595 Temperature sensor at pin0, set_value_168 Temperature sensor at pin0, press BTN at pin1, press BTN at pin1, set_value_151 Temperature sensor at pin0, None do_nothing, set_value_153 Temperature sensor at pin0, set_value_113 Temperature sensor at pin0, None do_nothing with 0
         

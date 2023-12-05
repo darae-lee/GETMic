@@ -230,6 +230,9 @@ def calculate_coverage(filename, solution):
     elif filename == "SegmentDisplay.py":
         from converted_codes import SegmentDisplay
         exec_code = SegmentDisplay.exec_code
+    elif filename == "LoveOMeter_button.py":
+        from converted_codes import LoveOMeter_button
+        exec_code = LoveOMeter_button.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code

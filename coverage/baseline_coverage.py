@@ -32,6 +32,9 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
     elif filename == "SegmentDisplay.py":
         from converted_codes import SegmentDisplay
         exec_code = SegmentDisplay.exec_code
+    elif filename == "LoveOMeter_button.py":
+        from converted_codes import LoveOMeter_button
+        exec_code = LoveOMeter_button.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code
@@ -110,9 +113,8 @@ Coverage Result for {args.filename} (with ui_length = {args.l}, trial_limit = {a
     with open(f"coverage/result.txt", 'a') as file:
         file.write(content_to_write)
 
-
-    with open(f"coverage/result_{args.filename}.csv", 'w') as file:
-        file.write("")
+    # with open(f"coverage/result_{args.filename}.csv", 'w') as file:
+    #     file.write("")
 
     with open(f"coverage/result_{args.filename}.csv", 'a') as file:
         csv_writer = csv.writer(file)

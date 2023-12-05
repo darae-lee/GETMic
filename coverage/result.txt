@@ -1,56 +1,80 @@
 
-Coverage Result for Button.py (with ui_length = 3, trial_limit = 500)
-    - Trials needed to achieve 100% coverage : 1
-    - Max Coverage % until 500 trials: 100.00%
-    - Total Execution Time: 0.13364 sec
-    - Best seq: [[1577, 1722], [165, 1060], [1990, 1658]]
-        
-
-Coverage Result for IfStatementConditional.py (with ui_length = 3, trial_limit = 500)
-    - Trials needed to achieve 100% coverage : 1
-    - Max Coverage % until 500 trials: 100.00%
-    - Total Execution Time: 0.13579 sec
-    - Best seq: [[1577, 1722], [165, 1060], [1990, 1658]]
-        
-
-Coverage Result for StateChangeDetection.py (with ui_length = 3, trial_limit = 500)
-    - Trials needed to achieve 100% coverage : 8
-    - Max Coverage % until 500 trials: 100.00%
-    - Total Execution Time: 0.66471 sec
-    - Best seq: [[583, 1834], [373, 329], [1310, 2004]]
-        
-
-Coverage Result for SwitchCase.py (with ui_length = 3, trial_limit = 500)
-    - Trials needed to achieve 100% coverage : 230
-    - Max Coverage % until 500 trials: 100.00%
-    - Total Execution Time: 18.54501 sec
-    - Best seq: [[2019, 1462], [1179, 1372], [485, 1674]]
-        
-
-Coverage Result for LoveOMeter.py (with ui_length = 10, trial_limit = 500)
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 0)
     - Trials needed to achieve 100% coverage : -
-    - Max Coverage % until 500 trials: 92.86%
-    - Total Execution Time: 61.44010 sec
-    - Best seq: [[896, 185], [303, 109], [509, 772], [490, 1602], [374, 1516], [475, 149], [88, 797], [757, 507], [1962, 862], [250, 93]]
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 67.12127 sec
+    - Best seq: [[1745, 254], [412, 599], [896, 185], [303, 109], [509, 772], [490, 1602], [374, 1516], [475, 149], [88, 797], [757, 507], [1962, 862], [250, 93]]
+    - Best seq (human): press BTN at pin1, set_value_599 Temperature sensor at pin0, unpress BTN at pin1, None do_nothing, press BTN at pin1, set_value_578 Temperature sensor at pin0, press BTN at pin1, set_value_149 Temperature sensor at pin0, set_value_797 Temperature sensor at pin0, set_value_507 Temperature sensor at pin0, None do_nothing, set_value_93 Temperature sensor at pin0
         
 
-Coverage Result for SegmentDisplay.py (with ui_length = 4, trial_limit = 500)
-    - Trials needed to achieve 100% coverage : 6
-    - Max Coverage % until 500 trials: 100.00%
-    - Total Execution Time: 6.16764 sec
-    - Best seq: [[908, 977], [583, 1834], [373, 329], [1310, 2004]]
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 1)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 60.94553 sec
+    - Best seq: [[1632, 18], [278, 1625], [625, 850], [1942, 1612], [2022, 404], [1679, 675], [2018, 880], [1264, 148], [1223, 1200], [568, 1028], [1244, 1949], [546, 1787]]
+    - Best seq (human): None do_nothing, unpress BTN at pin1, set_value_850 Temperature sensor at pin0, set_value_588 Temperature sensor at pin0, None do_nothing, unpress BTN at pin1, press BTN at pin1, set_value_148 Temperature sensor at pin0, press BTN at pin1, set_value_4 Temperature sensor at pin0, unpress BTN at pin1, None do_nothing
         
 
-Coverage Result for SegmentDisplay.py (with ui_length = 4, trial_limit = 500)
-    - Trials needed to achieve 100% coverage : 6
-    - Max Coverage % until 500 trials: 100.00%
-    - Total Execution Time: 6.10404 sec
-    - Best seq: [[908, 977], [583, 1834], [373, 329], [1310, 2004]]
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 2)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 57.56122 sec
+    - Best seq: [[579, 1535], [1101, 1983], [1956, 1716], [2015, 1215], [1616, 948], [640, 2002], [1062, 1751], [345, 393], [291, 1458], [721, 600], [1707, 273], [352, 153]]
+    - Best seq (human): None do_nothing, None do_nothing, None do_nothing, unpress BTN at pin1, press BTN at pin1, set_value_978 Temperature sensor at pin0, None do_nothing, None do_nothing, None do_nothing, set_value_600 Temperature sensor at pin0, None do_nothing, set_value_153 Temperature sensor at pin0
         
 
-Coverage Result for SegmentDisplay.py (with ui_length = 4, trial_limit = 500)
-    - Trials needed to achieve 100% coverage : 6
-    - Max Coverage % until 500 trials: 100.00%
-    - Total Execution Time: 6.06533 sec
-    - Best seq: [[908, 977], [583, 1834], [373, 329], [1310, 2004]]
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 3)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 60.99604 sec
+    - Best seq: [[681, 1080], [1, 1682], [368, 289], [743, 1592], [1331, 922], [1618, 155], [163, 1061], [993, 184], [1366, 443], [307, 1167], [1377, 871], [1931, 433]]
+    - Best seq (human): None do_nothing, set_value_658 Temperature sensor at pin0, unpress BTN at pin1, press BTN at pin1, press BTN at pin1, set_value_155 Temperature sensor at pin0, set_value_37 Temperature sensor at pin0, None do_nothing, set_value_443 Temperature sensor at pin0, set_value_143 Temperature sensor at pin0, None do_nothing, unpress BTN at pin1
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 4)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 57.49496 sec
+    - Best seq: [[1584, 1739], [1428, 1868], [842, 1948], [1751, 52], [1093, 149], [350, 1076], [631, 1462], [2031, 88], [625, 1889], [457, 792], [796, 191], [814, 2000]]
+    - Best seq (human): None do_nothing, None do_nothing, press BTN at pin1, press BTN at pin1, set_value_149 Temperature sensor at pin0, press BTN at pin1, set_value_438 Temperature sensor at pin0, None do_nothing, set_value_865 Temperature sensor at pin0, set_value_792 Temperature sensor at pin0, set_value_191 Temperature sensor at pin0, set_value_976 Temperature sensor at pin0
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 5)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 57.97745 sec
+    - Best seq: [[1755, 1324], [1906, 1891], [408, 784], [633, 651], [291, 1534], [1579, 1923], [623, 1040], [451, 1136], [661, 1175], [963, 135], [1974, 131], [1410, 1511]]
+    - Best seq (human): None do_nothing, set_value_867 Temperature sensor at pin0, None do_nothing, None do_nothing, None do_nothing, set_value_899 Temperature sensor at pin0, press BTN at pin1, set_value_112 Temperature sensor at pin0, set_value_151 Temperature sensor at pin0, None do_nothing, None do_nothing, None do_nothing
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 6)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 65.21994 sec
+    - Best seq: [[1031, 1082], [1581, 1478], [12, 1409], [1712, 1228], [716, 2023], [1444, 154], [64, 838], [26, 183], [124, 1947], [421, 1701], [1980, 1337], [1927, 828]]
+    - Best seq (human): press BTN at pin1, None do_nothing, None do_nothing, press BTN at pin1, unpress BTN at pin1, set_value_154 Temperature sensor at pin0, set_value_838 Temperature sensor at pin0, unpress BTN at pin1, set_value_923 Temperature sensor at pin0, set_value_677 Temperature sensor at pin0, None do_nothing, set_value_828 Temperature sensor at pin0
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 7)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 76.51854 sec
+    - Best seq: [[816, 270], [1572, 438], [1009, 842], [832, 458], [138, 141], [358, 1177], [1954, 409], [543, 400], [839, 1206], [1307, 1378], [1735, 1069], [85, 1437]]
+    - Best seq (human): None do_nothing, None do_nothing, set_value_842 Temperature sensor at pin0, set_value_458 Temperature sensor at pin0, None do_nothing, set_value_153 Temperature sensor at pin0, set_value_409 Temperature sensor at pin0, None do_nothing, press BTN at pin1, press BTN at pin1, set_value_45 Temperature sensor at pin0, set_value_413 Temperature sensor at pin0
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 8)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 74.56421 sec
+    - Best seq: [[735, 311], [76, 144], [653, 1428], [1233, 1629], [1995, 913], [1483, 1175], [625, 1652], [685, 371], [71, 1129], [1473, 1579], [455, 104], [402, 529]]
+    - Best seq (human): None do_nothing, set_value_144 Temperature sensor at pin0, press BTN at pin1, None do_nothing, None do_nothing, set_value_151 Temperature sensor at pin0, set_value_628 Temperature sensor at pin0, set_value_371 Temperature sensor at pin0, unpress BTN at pin1, None do_nothing, press BTN at pin1, None do_nothing
+        
+
+Coverage Result for LoveOMeter_button.py (with ui_length = 12, trial_limit = 1000, random_seed = 9)
+    - Trials needed to achieve 100% coverage : -
+    - Max Coverage % until 1000 trials: 90.32%
+    - Total Execution Time: 75.60390 sec
+    - Best seq: [[1403, 1374], [663, 800], [1009, 839], [324, 1727], [1373, 850], [1914, 810], [1785, 927], [317, 1225], [649, 1970], [1684, 148], [746, 484], [306, 1022]]
+    - Best seq (human): press BTN at pin1, None do_nothing, set_value_839 Temperature sensor at pin0, None do_nothing, press BTN at pin1, None do_nothing, None do_nothing, unpress BTN at pin1, set_value_946 Temperature sensor at pin0, set_value_148 Temperature sensor at pin0, press BTN at pin1, None do_nothing
         
