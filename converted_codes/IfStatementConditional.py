@@ -2,8 +2,8 @@ import os  # pragma: no cover
 import sys  # pragma: no cover
 parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover
 sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover
-import utime  # pragma: no cover
 import machine  # pragma: no cover
+import utime  # pragma: no cover
 
 def exec_code(random_interaction_seq: list):
     machine.load_board(__file__)
