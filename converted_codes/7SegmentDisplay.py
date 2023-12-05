@@ -2,7 +2,8 @@ import os  # pragma: no cover
 import sys  # pragma: no cover
 parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover
 sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover
-import utime  # pragma: no cover
+from machine import Pin  # pragma: no cover
+from utime import sleep  # pragma: no cover
 import machine  # pragma: no cover
 
 def exec_code(random_interaction_seq: list):
@@ -18,14 +19,14 @@ def exec_code(random_interaction_seq: list):
     #       D
     
     pins = [
-        machine.Pin(2, machine.Pin.OUT),  # A
-        machine.Pin(3, machine.Pin.OUT),  # B
-        machine.Pin(4, machine.Pin.OUT),  # C
-        machine.Pin(5, machine.Pin.OUT),  # D
-        machine.Pin(6, machine.Pin.OUT),  # E
-        machine.Pin(8, machine.Pin.OUT),  # F
-        machine.Pin(7, machine.Pin.OUT),  # G
-        machine.Pin(0, machine.Pin.OUT)   # DP (not connected)
+        Pin(2, Pin.OUT),  # A
+        Pin(3, Pin.OUT),  # B
+        Pin(4, Pin.OUT),  # C
+        Pin(5, Pin.OUT),  # D
+        Pin(6, Pin.OUT),  # E
+        Pin(8, Pin.OUT),  # F
+        Pin(7, Pin.OUT),  # G
+        Pin(0, Pin.OUT)   # DP (not connected)
     ]
     
     # Common anode 7-segment display digit patterns
@@ -55,7 +56,7 @@ def exec_code(random_interaction_seq: list):
     
     reset()
     
-    switch = machine.Pin(13, machine.Pin.IN)
+    switch = Pin(13, Pin.IN)
     
     interactor = machine.UserInteract(random_interaction_seq)
     interactor.start()
@@ -68,7 +69,7 @@ def exec_code(random_interaction_seq: list):
                     break
                 for j in range(len(pins) - 1):
                     pins[j].value(digits[i][j])
-                utime.sleep(0.5)
+                sleep(0.5)
         else:
             # Descending counter
             for i in range(len(digits) - 1, -1, -1):
@@ -76,6 +77,6 @@ def exec_code(random_interaction_seq: list):
                     break
                 for j in range(len(pins)):
                     pins[j].value(digits[i][j])
-                utime.sleep(0.5)
+                sleep(0.5)
         if not interactor.is_alive():
             break
