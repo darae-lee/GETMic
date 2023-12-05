@@ -230,6 +230,9 @@ def calculate_coverage(filename, solution):
     elif filename == "SegmentDisplay.py":
         from converted_codes import SegmentDisplay
         exec_code = SegmentDisplay.exec_code
+    elif filename == "ComplexButton.py":
+        from converted_codes import ComplexButton
+        exec_code = ComplexButton.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code
@@ -256,7 +259,7 @@ def calculate_coverage(filename, solution):
     curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
     os.remove("ga/report.json")
 
-    # cov.html_report(directory=f"ga/html_{curr_coverage}")  # for inspection
+    cov.html_report(directory=f"ga/html_{curr_coverage}")  # for inspection
     cov.erase()
 
     return curr_coverage
@@ -265,7 +268,12 @@ def ga(filename, evaluator, ui_length, pp_size):
     population = []
     MAX_NUM = 2048
     for _ in range(pp_size):
+        # s = [(0, 0), (2, 0), (0, 0), (2, 1), (1, 0), (0, 0)]
+        # prev_num = len(s)
+        # for i in range(ui_length - prev_num):
+        #     s.append((0, 0))
         s = Solution(random_codons(ui_length, (0, MAX_NUM)))
+        # s = Solution(s)
         s.fitness = evaluator.evaluate(s.sol)
         population.append(s)
         if s.fitness == 0:
@@ -275,7 +283,7 @@ def ga(filename, evaluator, ui_length, pp_size):
     population = sorted(population, key=lambda x: (x.fitness, x.sol[0][0]), reverse=False)
     best_solution = population[0]
     print(f"best sol in initial population: {best_solution}")
-
+    curr_coverage = calculate_coverage(filename, best_solution)
     while count < budget and best_solution.fitness > 0:
         next_gen = []
         while len(next_gen) < len(population):

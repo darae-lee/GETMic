@@ -27,6 +27,9 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
     elif filename == "SegmentDisplay.py":
         from converted_codes import SegmentDisplay
         exec_code = SegmentDisplay.exec_code
+    elif filename == "ComplexButton.py":
+        from converted_codes import ComplexButton
+        exec_code = ComplexButton.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code
