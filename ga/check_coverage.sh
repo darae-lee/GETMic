@@ -13,6 +13,6 @@ fi
 # python ga/sbst.py StateChangeDetection.py --p 8 --l 3
 # python ga/sbst.py SwitchCase.py --p 8 --l 3
 # python ga/sbst.py LoveOMeter.py --p 10 --l 10
-python ga/sbst.py SegmentDisplay.py --p 10 --l 5
+python ga/sbst.py SegmentDisplay.py --p 10 --l 3
 ``
 echo "Done calculating GA coverage!"

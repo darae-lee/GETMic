@@ -33,3 +33,38 @@ Coverage Result for LoveOMeter.py (with ui_length = 10, population_size = 10)
     - Total Execution Time: 9.36473 sec
     - Best Test Case: (1825, 595), (1710, 1295), (58, 9), (1951, 282), (1175, 150), (1383, 642), (1923, 1178), (1591, 1027), (1369, 655), (980, 913) with 0
         
+
+Coverage Result for SegmentDisplay.py (with ui_length = 6, population_size = 10)
+    - Generations needed to achieve 100% coverage : 0
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 6.34702 sec
+    - Best Test Case: press BTN at right, press BTN at right, None do_nothing, press BTN at right, unpress BTN at right, None do_nothing with 0
+        
+
+Coverage Result for SegmentDisplay.py (with ui_length = 4, population_size = 10)
+    - Generations needed to achieve 100% coverage : 0
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 6.79226 sec
+    - Best Test Case: None do_nothing, press BTN at right, unpress BTN at right, None do_nothing with 0
+        
+
+Coverage Result for SegmentDisplay.py (with ui_length = 4, population_size = 10)
+    - Generations needed to achieve 100% coverage : 0
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 6.84028 sec
+    - Best Test Case: None do_nothing, press BTN with pin13, unpress BTN with pin13, None do_nothing with 0
+        
+
+Coverage Result for SegmentDisplay.py (with ui_length = 4, population_size = 10)
+    - Generations needed to achieve 100% coverage : 0
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 6.77861 sec
+    - Best Test Case: None do_nothing, press BTN at pin13, unpress BTN at pin13, None do_nothing with 0
+        
+
+Coverage Result for SegmentDisplay.py (with ui_length = 4, population_size = 10)
+    - Generations needed to achieve 100% coverage : 0
+    - Max Coverage % until 100 generations: 100.00%
+    - Total Execution Time: 6.79044 sec
+    - Best Test Case: None do_nothing, press BTN at pin13, unpress BTN at pin13, None do_nothing with 0
+        

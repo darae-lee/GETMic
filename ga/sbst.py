@@ -7,8 +7,8 @@ import os
 import json
 import time
 import platform
+import csv
 
-random.seed(0)
 
 class codeNodes:
     def __init__(self):
@@ -616,7 +616,10 @@ if __name__ == "__main__":
     parser.add_argument("filename", help="the python file to check baseline coverage")
     parser.add_argument("--p", type=int, help="GA population size")
     parser.add_argument("--l", type=int, help="user interaction sequence length to randomly generate")
+    parser.add_argument("--r", type=int, help="random seed")
+    
     args = parser.parse_args()
+    random.seed(args.r)
 
     with open(f"target_codes/{args.filename}", "r") as f:
         code = f.read()
@@ -648,5 +651,9 @@ Coverage Result for {args.filename} (with ui_length = {args.l}, population_size 
 '''
     with open("ga/result.txt", 'a') as file:
         file.write(content_to_write)
+
+    with open("ga/result.csv", "a") as file:
+        csv_writer = csv.writer(file)
+        csv_writer.writerow([args.filename, args.l, args.p, args.r, generations, max_coverage, end - start])
 
     print(content_to_write)

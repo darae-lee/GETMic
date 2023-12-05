@@ -6,7 +6,7 @@ import sys
 import os
 import time
 import platform
-
+import csv
 
 def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
     if filename == "Button.py":
@@ -103,5 +103,10 @@ Coverage Result for {args.filename} (with ui_length = {args.l}, trial_limit = {a
 
     with open("coverage/result.txt", 'a') as file:
         file.write(content_to_write)
+
+    with open("ga/result.csv", "a") as file:
+        csv_writer = csv.writer(file)
+        csv_writer.writerow([args.filename, args.l, args.t, args.r, trials_needed, max_coverage, end - start])
+
 
     print(content_to_write)

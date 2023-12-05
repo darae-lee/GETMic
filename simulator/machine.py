@@ -24,22 +24,22 @@ def load_board(path_name):
     if name == "Button.py" or name == "StateChangeDetection.py":
         # Button.py
         led = simulator.LED(HW_board.gnd, HW_board.pins[13])
-        btn = simulator.Button(HW_board.gnd, HW_board.pins[2], HW_board)
+        btn = simulator.Button(HW_board.vcc, HW_board.pins[2], HW_board)
     elif name == "IfStatementConditional.py":
         # IfStatementConditional.py
         led = simulator.LED(HW_board.gnd, HW_board.pins[13])
-        poten = simulator.Potentialmeter(HW_board.gnd, HW_board.pins[0], HW_board)
+        poten = simulator.Potentialmeter(HW_board.vcc, HW_board.pins[0], HW_board)
     elif name == "LoveOMeter.py":
-        tem = simulator.TemperatureSensor(HW_board.gnd, HW_board.pins[0], HW_board)
+        tem = simulator.TemperatureSensor(HW_board.vcc, HW_board.pins[0], HW_board)
         for i in range(2, 5):
-            led = simulator.LED(HW_board.gnd, HW_board.pins[i])
+            led = simulator.LED(HW_board.vcc, HW_board.pins[i])
     elif name == "SwitchCase.py":
-        photo = simulator.Photoresistor(HW_board.gnd, HW_board.pins[0], HW_board)
+        photo = simulator.Photoresistor(HW_board.vcc, HW_board.pins[0], HW_board)
     elif name == 'SegmentDisplay.py':
         for i in range(2, 9):
             led = simulator.LED(HW_board.gnd, HW_board.pins[i])
         led = simulator.LED(HW_board.gnd, HW_board.pins[0])
-        btn = simulator.Button(HW_board.gnd, HW_board.pins[13], HW_board)
+        btn = simulator.Button(HW_board.vcc, HW_board.pins[13], HW_board)
 
 
 class UserInteract(threading.Thread):

@@ -33,3 +33,24 @@ Coverage Result for LoveOMeter.py (with ui_length = 10, trial_limit = 500)
     - Total Execution Time: 61.44010 sec
     - Best seq: [[896, 185], [303, 109], [509, 772], [490, 1602], [374, 1516], [475, 149], [88, 797], [757, 507], [1962, 862], [250, 93]]
         
+
+Coverage Result for SegmentDisplay.py (with ui_length = 4, trial_limit = 500)
+    - Trials needed to achieve 100% coverage : 6
+    - Max Coverage % until 500 trials: 100.00%
+    - Total Execution Time: 6.16764 sec
+    - Best seq: [[908, 977], [583, 1834], [373, 329], [1310, 2004]]
+        
+
+Coverage Result for SegmentDisplay.py (with ui_length = 4, trial_limit = 500)
+    - Trials needed to achieve 100% coverage : 6
+    - Max Coverage % until 500 trials: 100.00%
+    - Total Execution Time: 6.10404 sec
+    - Best seq: [[908, 977], [583, 1834], [373, 329], [1310, 2004]]
+        
+
+Coverage Result for SegmentDisplay.py (with ui_length = 4, trial_limit = 500)
+    - Trials needed to achieve 100% coverage : 6
+    - Max Coverage % until 500 trials: 100.00%
+    - Total Execution Time: 6.06533 sec
+    - Best seq: [[908, 977], [583, 1834], [373, 329], [1310, 2004]]
+        

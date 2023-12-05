@@ -1,9 +1,6 @@
-import random
 INPUT = 0
 OUTPUT = 1
 NON_SET = 2
-
-random.seed(0)
 
 class HWPin:
     def __init__(self, name="pin"):
@@ -43,9 +40,9 @@ class Board:
         # self.pin1 = HWPin("pin1")
         # self.pin2 = HWPin("pin2")
         self.gnd = HWPin("gnd")
-        self.gnd.state = -1
+        self.gnd.state = 0
         self.vcc = HWPin("vcc")
-        self.vcc.state = 1
+        self.vcc.state = -1
         self.objects = []
         self.action_per_object = []
         self.readable_action_per_object = {}
@@ -107,9 +104,9 @@ class Board:
                 # send travel in reverse way...?
                 # for other, startin from the gnd direction (actually vcc)
                 pass
-        self.gnd.state = -1
-        self.gnd.travel(dir=INPUT)
-        self.gnd.state = -1
+        self.vcc.state = -1
+        self.vcc.travel(dir=INPUT)
+        self.vcc.state = -1
         # static one?
         pass
         
@@ -177,7 +174,6 @@ class AnalogComponent(Component):
     def __init__(self, left, right, board):
         super().__init__(left, right) 
         # if you push it, the state becomes high
-        # random.seed(0)
         self.board = board
         self.max_value = 1024
         self.state = 0
