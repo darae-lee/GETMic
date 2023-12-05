@@ -161,9 +161,7 @@ while True:"""
         fitness = [float('inf')] * target_cnt
 
         loop_code = self.fill_user_interactions(codons)
-        print("_________evaluate start______")
         exec(loop_code, globals())
-        print("_________evaluate end______")
 
         return sum([max(0, f) for f in fitness])
 
@@ -227,6 +225,9 @@ def calculate_coverage(filename, solution):
     elif filename == "SwitchCase.py":
         from converted_codes import SwitchCase
         exec_code = SwitchCase.exec_code
+    elif filename == "SegmentDisplay.py":
+        from converted_codes import SegmentDisplay
+        exec_code = SegmentDisplay.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code
@@ -554,10 +555,13 @@ def seperate_code(filename, code):
 import os
 import sys
 parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-sys.path.append(os.path.join(parent_dir, 'simulator'))'''
+sys.path.append(os.path.join(parent_dir, 'simulator'))
+import machine'''
     initial_tree.body.append(ast.parse(initial_settings))
 
     for index, node in enumerate(tree.body):
+        if isinstance(node, ast.Import) and node.names[0].name == "machine":
+            continue
         if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
             initial_tree.body.append(node)
         else:
