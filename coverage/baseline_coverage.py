@@ -8,6 +8,11 @@ import time
 import platform
 import csv
 
+parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover
+sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover
+
+import machine
+
 def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
     if filename == "Button.py":
         from converted_codes import Button
@@ -98,13 +103,18 @@ Coverage Result for {args.filename} (with ui_length = {args.l}, trial_limit = {a
     - Max Coverage % until {args.t} trials: {max_coverage:.2f}%
     - Total Execution Time: {end - start:.5f} sec
     - Best seq: {best_seq}
+    - Best seq (human): {machine.convert_seqs_to_readable(best_seq)}
         
 '''
 
-    with open("coverage/result.txt", 'a') as file:
+    with open(f"coverage/result.txt", 'a') as file:
         file.write(content_to_write)
 
-    with open("ga/result.csv", "a") as file:
+
+    with open(f"coverage/result_{args.filename}.csv", 'w') as file:
+        file.write("")
+
+    with open(f"coverage/result_{args.filename}.csv", 'a') as file:
         csv_writer = csv.writer(file)
         csv_writer.writerow([args.filename, args.l, args.t, args.r, trials_needed, max_coverage, end - start])
 

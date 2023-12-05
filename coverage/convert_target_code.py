@@ -51,7 +51,7 @@ def convert_loop_code(code):
     loop_code = []
     for line in code:
         loop_code.append(INDENT + line)
-    loop_code.extend([INDENT*2 + "if not interactor.is_alive():\n",
+    loop_code.extend([INDENT*2 + "if not interactor.is_alive():  # pragma: no cover\n",
                       INDENT*3 + "break\n"])
     return loop_code
 

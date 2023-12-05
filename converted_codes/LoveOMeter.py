@@ -54,5 +54,5 @@ def exec_code(random_interaction_seq: list):
             pins[1].value(1)
             pins[2].value(1)
         utime.sleep(2/1000)
-        if not interactor.is_alive():
+        if not interactor.is_alive():  # pragma: no cover
             break
