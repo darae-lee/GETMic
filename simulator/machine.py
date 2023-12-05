@@ -40,6 +40,11 @@ def load_board(path_name):
             led = simulator.LED(HW_board.gnd, HW_board.pins[i])
         led = simulator.LED(HW_board.gnd, HW_board.pins[0])
         btn = simulator.Button(HW_board.vcc, HW_board.pins[13], HW_board)
+    elif name == 'LoveOMeter_button.py':
+        tem = simulator.TemperatureSensor(HW_board.vcc, HW_board.pins[0], HW_board)
+        for i in range(2, 5):
+            led = simulator.LED(HW_board.gnd, HW_board.pins[i])
+        btn = simulator.Button(HW_board.vcc, HW_board.pins[1], HW_board)
 
 
 class UserInteract(threading.Thread):
