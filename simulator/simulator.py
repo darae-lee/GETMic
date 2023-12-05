@@ -58,8 +58,6 @@ class Board:
         self.objects.append(object_key)
         self.action_per_object.append(actions)
         self.readable_action_per_object[object_key] = readable_actions
-        # print(object_key)
-        # print(self.readable_grammar.items())
     
     def __str__(self) -> str:
         return "board"
@@ -84,6 +82,16 @@ class Board:
             action_idx = action_code % len(actions)
             actions[action_idx]()
         self.updatecircuit()
+
+    def convertreadable(self, object_code: int, action_code: int):
+        object_idx = object_code % len(self.objects)
+        actions = self.action_per_object[object_idx]
+        object_name = list(self.readable_action_per_object.keys())[object_idx]
+        action_name = "None"
+        if len(actions) != 0:
+            action_idx = action_code % len(actions)
+            action_name = self.readable_action_per_object[object_name][action_idx]
+        return object_name, action_name
 
     def updatecircuit(self):
         # starting from gnd?
@@ -114,6 +122,7 @@ class Component:
         self.right.connect.append(right)
         right.connect.append(self)
         self.state = 0
+        self.name = str(right)
     
     def travel(self, state, dir):
         # print("HI!", dir, state, self.state)
@@ -135,7 +144,7 @@ class LED(Component):
         # assume left is - right is +
         super().__init__(left, right) 
     def __str__(self) -> str:
-        return "LED at {}".format(self.right)
+        return f"LED at {self.nae}"
 
 class Button(Component):
     def __init__(self, left, right, board):
@@ -152,15 +161,15 @@ class Button(Component):
         # if push, high / unpush, low
     
     def press(self):
-        print("press!!")
+        # print("press!!")
         self.state = 1 # update internal state
 
     def unpress(self):
-        print("unpress!!")
+        # print("unpress!!")
         self.state = 0 # update internal state
 
     def __str__(self) -> str:
-        return "BTN at {}".format(self.right)
+        return f"BTN at {self.name}"
 
 
 class AnalogComponent(Component):
@@ -184,15 +193,15 @@ class AnalogComponent(Component):
 
 class TemperatureSensor(AnalogComponent):
     def __str__(self):
-        return "Temperature sensor at {}".format(self.right)
+        return f"Temperature sensor at {self.name}"
     
 class Potentialmeter(AnalogComponent):
     def __str__(self) -> str:
-        return "Potentialmeter sensor at {}".format(self.right)
+        return f"Potentialmeter sensor at {self.name}"
 
 class Photoresistor(AnalogComponent):
     def __str__(self) -> str:
-        return "Photoresistor sensor at {}".format(self.right)
+        return f"Photoresistor sensor at {self.name}"
 
 if __name__ == '__main__':
     print("currently assume one led with button, two pin in board")

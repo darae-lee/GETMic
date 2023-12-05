@@ -5,6 +5,14 @@ import threading
 HW_board = None
 lock = threading.Lock()
 
+def convert_seqs_to_readable(seq:list):
+    readable_seq = []
+    for s, o in seq:
+        ns, no = HW_board.convertreadable(s, o)
+        sent = f"{no} {ns}"
+        readable_seq.append(sent)
+    return ", ".join(readable_seq)
+
 def load_board(path_name):
     global HW_board
     HW_board = simulator.Board(n=14)
@@ -27,6 +35,11 @@ def load_board(path_name):
             led = simulator.LED(HW_board.gnd, HW_board.pins[i])
     elif name == "SwitchCase.py":
         photo = simulator.Photoresistor(HW_board.gnd, HW_board.pins[0], HW_board)
+    elif name == 'SegmentDisplay.py':
+        for i in range(2, 9):
+            led = simulator.LED(HW_board.gnd, HW_board.pins[i])
+        led = simulator.LED(HW_board.gnd, HW_board.pins[0])
+        btn = simulator.Button(HW_board.gnd, HW_board.pins[13], HW_board)
 
 
 class UserInteract(threading.Thread):

@@ -173,7 +173,8 @@ class Solution:
         self.fitness = 0
 
     def __str__(self) -> str:
-        return f"{', '.join([str(x) for x in self.sol])} with {self.fitness}"
+        readable = machine.convert_seqs_to_readable(self.sol)
+        return f"{readable} with {self.fitness}"
 
 
 def random_codons(codons_length, num_range) -> list:
