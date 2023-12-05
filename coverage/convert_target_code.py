@@ -24,10 +24,15 @@ def convert_import_code(code):
     import_code = ["import os  # pragma: no cover\n",
                    "import sys  # pragma: no cover\n",
                    "parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover\n"
-                   "sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover\n",
-                   "import utime  # pragma: no cover\n",
-                   "import machine  # pragma: no cover\n",
-                   "\n"]
+                   "sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover\n"]
+    machine_flag = 0
+    for line in code:
+        import_code.append(line.rstrip() + "  # pragma: no cover\n")
+        if line.strip() == "import machine":
+            machine_flag = 1
+    if machine_flag==0:
+        import_code.append("import machine  # pragma: no cover\n")
+    import_code.append("\n")
     return import_code
 
 

@@ -2,6 +2,7 @@ import os  # pragma: no cover
 import sys  # pragma: no cover
 parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover
 sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover
+from machine import Pin  # pragma: no cover
 import utime  # pragma: no cover
 import machine  # pragma: no cover
 
@@ -12,8 +13,8 @@ def exec_code(random_interaction_seq: list):
     ledPin = 13
     buttonState = 0
     
-    p1 = machine.Pin(ledPin, machine.Pin.OUT)
-    p2 = machine.Pin(buttonPin, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    p1 = Pin(ledPin, Pin.OUT)
+    p2 = Pin(buttonPin, Pin.IN, Pin.PULL_DOWN)
     
     interactor = machine.UserInteract(random_interaction_seq)
     interactor.start()
