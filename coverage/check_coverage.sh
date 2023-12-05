@@ -8,10 +8,10 @@ else
     touch "$result_file_path"
 fi
 
-python coverage/baseline_coverage.py Button.py --t 1000 --l 20
-python coverage/baseline_coverage.py IfStatementConditional.py --t 1000 --l 20
-python coverage/baseline_coverage.py LoveOMeter.py --t 1000 --l 20
-python coverage/baseline_coverage.py StateChangeDetection.py --t 1000 --l 20
-python coverage/baseline_coverage.py SwitchCase.py --t 1000 --l 20
+python3 coverage/baseline_coverage.py Button.py --t 600 --l 20
+python3 coverage/baseline_coverage.py IfStatementConditional.py --t 600 --l 20
+python3 coverage/baseline_coverage.py LoveOMeter.py --t 600 --l 20
+python3 coverage/baseline_coverage.py StateChangeDetection.py --t 600 --l 20
+python3 coverage/baseline_coverage.py SwitchCase.py --t 600 --l 20
 
 echo "Done calculating baseline coverage!"
