@@ -78,20 +78,22 @@ if __name__ == "__main__":
     parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
     sys.path.append(parent_dir)
 
-    random.seed(0)
-
     parser = argparse.ArgumentParser()
     parser.add_argument("filename", help="the python file to check baseline coverage")
     parser.add_argument("--t", help="trial limit to execute until")
     parser.add_argument("--l", help="user interaction sequence length to randomly generate")
+    parser.add_argument("--r", help="random seed")
+
     args = parser.parse_args()
+
+    random.seed(int(args.r))
 
     start = time.time()
     trials_needed, max_coverage, best_seq = calculate_coverage(args.filename, trial_limit=int(args.t), ui_length=int(args.l))
     end = time.time()
 
     content_to_write = f'''
-Coverage Result for {args.filename} (with ui_length = {args.l}, trial_limit = {args.t})
+Coverage Result for {args.filename} (with ui_length = {args.l}, trial_limit = {args.t}, random_seed = {args.r})
     - Trials needed to achieve 100% coverage : { "-" if trials_needed==int(args.t) else trials_needed}
     - Max Coverage % until {args.t} trials: {max_coverage:.2f}%
     - Total Execution Time: {end - start:.5f} sec
