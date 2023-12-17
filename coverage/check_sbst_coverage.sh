@@ -8,15 +8,12 @@ else
     touch "$result_file_path"
 fi
 
-for ((i=0; i<10;i++));
- do
-   python coverage/sbst.py Button.py --t 500 --l 3 --r $i
-  #  python coverage/sbst.py IfStatementConditional.py --t 500 --l 3 --r $i
-  #  python coverage/sbst.py StateChangeDetection.py --t 500 --l 3 --r $i
-  #  python coverage/sbst.py SwitchCase.py --t 500 --l 3 --r $i
-  #  python coverage/sbst.py LoveOMeter.py --t 500 --l 10 --r $i
-  #  python coverage/sbst.py SegmentDisplay.py --t 500 --l 3 --r $i
-  #  python coverage/sbst.py WarmButton.py --t 1000 --l 12 --r $i
- done
+python coverage/sbst.py Button.py
+python coverage/sbst.py IfStatementConditional.py
+python coverage/sbst.py StateChangeDetection.py
+python coverage/sbst.py SwitchCase.py
+python coverage/sbst.py LoveOMeter.py
+python coverage/sbst.py SegmentDisplay.py
+python coverage/sbst.py WarmButton.py
 
 echo "Done calculating baseline coverage!"
