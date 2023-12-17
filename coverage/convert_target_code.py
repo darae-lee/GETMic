@@ -81,7 +81,7 @@ def convert_code(code):
     return above_loop_code + loop_code
 
 
-# usage: python simulator/convert_target_code.py target_codes/{}.py
+# usage: python coverage/convert_target_code.py target_codes/{}.py
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("target", help="the target python file to convert for checking baseline coverage")
@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
     current_file_path = os.path.dirname(os.path.abspath(__file__))
     parent_file_path = os.path.abspath(os.path.join(current_file_path, os.pardir))
-    test_file_name = os.path.join(parent_file_path, "converted_codes", os.path.basename(args.target))
+    test_file_name = os.path.join(parent_file_path, "coverage/converted_codes", os.path.basename(args.target))
 
     with open(test_file_name, 'w') as f:
         f.write("".join(new_code))

@@ -8,12 +8,14 @@ import time
 import platform
 import csv
 
-parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # pragma: no cover
-sys.path.append(os.path.join(parent_dir, 'simulator'))  # pragma: no cover
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(root_dir, 'simulator'))
 
 import machine
 
 def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
+
+    # Import target code
     if filename == "Button.py":
         from converted_codes import Button
         exec_code = Button.exec_code
@@ -55,7 +57,7 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
     # Keep testing until the coverage reaches 100%
     max_coverage = 0
     while curr_coverage < target_coverage and trials < trial_limit:
-        cov.start()  # Start measuring coverage // 32, 4 => 28/31
+        cov.start()  # Start measuring coverage
         random_interaction_seq = [[random.randint(0, 2048), random.randint(0, 2048)] for _ in range(ui_length)]
         exec_code(random_interaction_seq)
         cov.stop()  # Stop measuring coverage
@@ -67,20 +69,15 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
 
         system_name = platform.system()
         if system_name == 'Darwin':
-            summary = json_data["files"][f"converted_codes/{filename}"]["summary"]
+            summary = json_data["files"][f"coverage/converted_codes/{filename}"]["summary"]
         elif system_name == 'Windows':
-            summary = json_data["files"][f"converted_codes\\{filename}"]["summary"]
+            summary = json_data["files"][f"coverage\\converted_codes\\{filename}"]["summary"]
         else:
             NotImplementedError("Only Darwin & Windows..")
-        # print(summary)
-        curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
-        # os.remove("coverage/report.json")
-        cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
 
-        if int(curr_coverage) == 90: 
-            print(curr_coverage)
-            print(summary)
-            cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
+        curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
+        os.remove("coverage/report.json")
+        # cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
 
         print(f"Trial {trials}: {curr_coverage}%")
         # cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
@@ -92,11 +89,10 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
 
     return trials, max_coverage, best_seq
 
-# usage: python simulator/baseline_coverage.py {filename} --t {trial_limit} --l {ui_length}
+# usage: python coverage/baseline.py {filename} --t {trial_limit} --l {ui_length}
 if __name__ == "__main__":
-    # add parent directory (Gaeguri) to sys path
-    parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-    sys.path.append(parent_dir)
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    sys.path.append(root_dir)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("filename", help="the python file to check baseline coverage")
@@ -109,6 +105,7 @@ if __name__ == "__main__":
     random.seed(int(args.r))
 
     start = time.time()
+    # This coverage is statement level coverage(not branch level)
     trials_needed, max_coverage, best_seq = calculate_coverage(args.filename, trial_limit=int(args.t), ui_length=int(args.l))
     end = time.time()
 
@@ -122,15 +119,15 @@ Coverage Result for {args.filename} (with ui_length = {args.l}, trial_limit = {a
         
 '''
 
-    with open(f"coverage/result.txt", 'a') as file:
-        file.write(content_to_write)
-
-    # with open(f"coverage/result_{args.filename}.csv", 'w') as file:
-    #     file.write("")
-
-    with open(f"coverage/result_{args.filename}.csv", 'a') as file:
-        csv_writer = csv.writer(file)
-        csv_writer.writerow([args.filename, args.l, args.t, args.r, trials_needed, max_coverage, end - start])
-
+    csv_filename = f"coverage/result_baseline/{args.filename[:-3]}.csv"
+    if not os.path.isfile(csv_filename):
+        with open(csv_filename, 'w', newline='') as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerow(['filename', 'ui_length', 'trial_limit', 'seed', 'trials_needed', 'max_coverage', 'time_taken', 'genotype', 'phenotype'])
+            csv_writer.writerow([args.filename, args.l, args.t, args.r, trials_needed, max_coverage, end - start, best_seq, machine.convert_seqs_to_readable(best_seq)])
+    else:
+        with open(csv_filename, 'a', newline="\n") as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerow([args.filename, args.l, args.t, args.r, trials_needed, max_coverage, end - start, best_seq, machine.convert_seqs_to_readable(best_seq)])
 
     print(content_to_write)

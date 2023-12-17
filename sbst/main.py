@@ -9,7 +9,6 @@ import time
 import platform
 import csv
 
-
 class codeNodes:
     def __init__(self):
         self.target_ids = []
@@ -211,65 +210,6 @@ def select(k, population):
     participants = random.sample(population, k)
     return sorted(participants, key=lambda x: (x.fitness, x.sol[0][0]), reverse=False)[0]
 
-def calculate_coverage(filename, solution):
-    if filename == "Button.py":
-        from converted_codes import Button
-        exec_code = Button.exec_code
-    elif filename == "IfStatementConditional.py":
-        from converted_codes import IfStatementConditional
-        exec_code = IfStatementConditional.exec_code
-    elif filename == "LoveOMeter.py":
-        from converted_codes import LoveOMeter
-        exec_code = LoveOMeter.exec_code
-    elif filename == "StateChangeDetection.py":
-        from converted_codes import StateChangeDetection
-        exec_code = StateChangeDetection.exec_code
-    elif filename == "SwitchCase.py":
-        from converted_codes import SwitchCase
-        exec_code = SwitchCase.exec_code
-    elif filename == "SegmentDisplay.py":
-        from converted_codes import SegmentDisplay
-        exec_code = SegmentDisplay.exec_code
-    elif filename == "WarmButton.py":
-        from converted_codes import WarmButton
-        exec_code = WarmButton.exec_code
-    elif filename == "ButtonCounter.py":
-        from converted_codes import ButtonCounter
-        exec_code = ButtonCounter.exec_code
-    elif filename == "ComplexButton.py":
-        from converted_codes import ComplexButton
-        exec_code = ComplexButton.exec_code
-    else:  # Defualt: button
-        from converted_codes import Button
-        exec_code = Button.exec_code
-
-    cov = coverage.Coverage()
-
-    cov.start()
-    exec_code(solution.sol)
-    cov.stop()
-
-    # Check current coverage
-    cov.json_report(outfile="ga/report.json")
-    with open("ga/report.json", 'r') as file:
-        json_data = json.load(file)
-
-    system_name = platform.system()
-    if system_name == 'Darwin':
-        summary = json_data["files"][f"converted_codes/{filename}"]["summary"]
-    elif system_name == 'Windows':
-        summary = json_data["files"][f"converted_codes\\{filename}"]["summary"]
-    else:
-        NotImplementedError("Only Darwin & Windows..")
-
-    curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
-    os.remove("ga/report.json")
-
-    cov.html_report(directory=f"ga/html_{curr_coverage}")  # for inspection
-    cov.erase()
-
-    return curr_coverage
-
 def ga(filename, evaluator, ui_length, pp_size):
     population = []
     MAX_NUM = 2048
@@ -310,10 +250,8 @@ def ga(filename, evaluator, ui_length, pp_size):
         best_solution = population[0]
         print(count, best_solution)
         count += 1
-
-    curr_coverage = calculate_coverage(filename, best_solution)
-
-    return best_solution, count, curr_coverage
+        
+    return best_solution, count
 
 
 '''
@@ -644,7 +582,7 @@ if __name__ == "__main__":
     )
 
     start = time.time()
-    best_solution, generations, max_coverage = ga(args.filename, evaluator, args.l, args.p)
+    best_solution, generations = ga(args.filename, evaluator, args.l, args.p)
     end = time.time()
     
     print("result: ", best_solution, "done.")
@@ -653,17 +591,19 @@ if __name__ == "__main__":
     content_to_write = f'''
 Coverage Result for {args.filename} (with ui_length = {args.l}, population_size = {args.p})
     - Generations needed to achieve 100% coverage : { "-" if generations==100 else generations}
-    - Max Coverage % until 100 generations: {max_coverage:.2f}%
     - Total Execution Time: {end - start:.5f} sec
     - Best Test Case: {best_solution}
-        
 '''
-    print([args.filename, args.l, args.p, args.r, generations, max_coverage, end - start])
-    with open("ga/result.txt", 'a') as file:
-        file.write(content_to_write)
 
-    with open(f"ga/result_{args.filename}.csv", "a") as file:
-        csv_writer = csv.writer(file)
-        csv_writer.writerow([args.filename, args.l, args.p, args.r, generations, max_coverage, end - start])
+    csv_filename = f"sbst/result/{args.filename[:-3]}.csv"
+    if not os.path.isfile(csv_filename):
+        with open(csv_filename, 'w', newline='') as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerow(['filename', 'ui_length', 'pp_size', 'seed', 'generations', 'time_taken', 'genotype', 'phenotype'])
+            csv_writer.writerow([args.filename, args.l, args.p, args.r, generations, end-start, best_solution.sol, machine.convert_seqs_to_readable(best_solution.sol)])
+    else:
+        with open(csv_filename, 'a', newline="\n") as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerow([args.filename, args.l, args.p, args.r, generations, end-start, best_solution.sol, machine.convert_seqs_to_readable(best_solution.sol)])
 
     print(content_to_write)

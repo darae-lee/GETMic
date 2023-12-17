@@ -20,13 +20,12 @@ def load_board(path_name):
         name = path_name.split("\\")[-1]
     else:
         name = path_name.split("/")[-1]
-    # print(name)
+
+    # Set Components of the board according to the target code
     if name == "Button.py" or name == "StateChangeDetection.py":
-        # Button.py
         led = simulator.LED(HW_board.gnd, HW_board.pins[13])
         btn = simulator.Button(HW_board.vcc, HW_board.pins[2], HW_board)
     elif name == "IfStatementConditional.py":
-        # IfStatementConditional.py
         led = simulator.LED(HW_board.gnd, HW_board.pins[13])
         poten = simulator.Potentialmeter(HW_board.vcc, HW_board.pins[0], HW_board)
     elif name == "LoveOMeter.py":
@@ -96,6 +95,5 @@ class Pin:
             # writing
             ret_val = HW_board.digitalwirte(self.pin_number, value)
         lock.release()
-        # print(ret_val)
         return ret_val
 

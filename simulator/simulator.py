@@ -17,13 +17,9 @@ class HWPin:
         else:
             self.state = state
         for con in self.connect:
-            # call component except the board pin..?
-            # if state != -1:
-            # print(con)
             if isinstance(con, HWPin):
                 # if next is pin, just update the next ones state
                 if state != -1:
-                    # print("update the connected one", state)
                     con.state = state
                         
             else:
@@ -37,8 +33,6 @@ class Board:
         self.pins = []
         for i in range(n):
             self.pins.append(HWPin(f"pin{i}"))
-        # self.pin1 = HWPin("pin1")
-        # self.pin2 = HWPin("pin2")
         self.gnd = HWPin("gnd")
         self.gnd.state = 0
         self.vcc = HWPin("vcc")
@@ -95,19 +89,14 @@ class Board:
         # starting from all output pins, propogate its state
         for pin in self.pins:
             if pin.mode == OUTPUT:
-                # print("output", pin)
-                # send travel????
                 pin.travel(dir=OUTPUT)
                 pass
             elif pin.mode == INPUT:
-                # print("input", pin)
-                # send travel in reverse way...?
                 # for other, startin from the gnd direction (actually vcc)
                 pass
         self.vcc.state = -1
         self.vcc.travel(dir=INPUT)
         self.vcc.state = -1
-        # static one?
         pass
         
 class Component:
@@ -122,18 +111,14 @@ class Component:
         self.name = str(right)
     
     def travel(self, state, dir):
-        # print("HI!", dir, state, self.state)
         if state == -1:
             state = self.state
         else:
             self.state = state
         if dir == OUTPUT:
-            # print("call left", self.state)
             self.left.travel(self.state, dir)
         else:
-            # print("call right", self.state)
             self.right.travel(self.state, dir)
-        # self.state = state
         
     
 class LED(Component):
@@ -158,11 +143,9 @@ class Button(Component):
         # if push, high / unpush, low
     
     def press(self):
-        # print("press!!")
         self.state = 1 # update internal state
 
     def unpress(self):
-        # print("unpress!!")
         self.state = 0 # update internal state
 
     def __str__(self) -> str:
@@ -208,15 +191,4 @@ if __name__ == '__main__':
     led = LED(board.gnd, board.pins[led_right])
     btn_right = int(input("BTN right 0 or 1: "))
     btn = Button(board.gnd, board.pins[btn_right], board)
-
-    # board.pinmode(led_right, OUTPUT)
-    # board.pinmode(btn_right, INPUT)
-    # read_val = board.digitalread(btn_right)
-    # print(read_val)
-    # print(board.grammar)
-    # print("press!!")
-    # board.userinteraction(0)
-    # print(board.digitalread(btn_right))
-    # board.digitalwirte(led_right, 1)
-    # print(board.digitalread(btn_right))
     
