@@ -1,0 +1,11 @@
+filename,ui_length,pp_size,seed,generations,time_taken,genotype,phenotype,coverage
+IfStatementConditional.py,3,10,0,0,0.0104751586914062,"[(1577, 1722), (165, 1060), (1990, 1658)]","set_value_698 Potentialmeter sensor at pin0, set_value_36 Potentialmeter sensor at pin0, None do_nothing",100.0
+IfStatementConditional.py,3,10,1,0,0.0170836448669433,"[(550, 258), (1044, 482), (2029, 1841)]","None do_nothing, None do_nothing, set_value_817 Potentialmeter sensor at pin0",100.0
+IfStatementConditional.py,3,10,2,0,0.0114016532897949,"[(231, 375), (347, 1478), (692, 1262)]","set_value_375 Potentialmeter sensor at pin0, set_value_454 Potentialmeter sensor at pin0, None do_nothing",100.0
+IfStatementConditional.py,3,10,3,0,0.0224401950836181,"[(974, 534), (1515, 1941), (268, 53)]","None do_nothing, set_value_917 Potentialmeter sensor at pin0, None do_nothing",100.0
+IfStatementConditional.py,3,10,4,0,0.019404649734497,"[(966, 1242), (422, 1622), (1961, 634)]","None do_nothing, None do_nothing, set_value_634 Potentialmeter sensor at pin0",100.0
+IfStatementConditional.py,3,10,5,0,0.0263929367065429,"[(642, 463), (1522, 1921), (1009, 1559)]","None do_nothing, None do_nothing, set_value_535 Potentialmeter sensor at pin0",87.5
+IfStatementConditional.py,3,10,6,0,0.0202038288116455,"[(330, 1986), (1071, 150), (1, 596)]","None do_nothing, set_value_150 Potentialmeter sensor at pin0, set_value_596 Potentialmeter sensor at pin0",100.0
+IfStatementConditional.py,3,10,7,0,0.0341825485229492,"[(507, 914), (253, 1624), (203, 905)]","set_value_914 Potentialmeter sensor at pin0, set_value_600 Potentialmeter sensor at pin0, set_value_905 Potentialmeter sensor at pin0",100.0
+IfStatementConditional.py,3,10,8,0,0.0173830986022949,"[(928, 1517), (1537, 517), (791, 179)]","None do_nothing, set_value_517 Potentialmeter sensor at pin0, set_value_179 Potentialmeter sensor at pin0",100.0
+IfStatementConditional.py,3,10,9,0,0.0242283344268798,"[(1385, 1899), (331, 1368), (167, 1552)]","set_value_875 Potentialmeter sensor at pin0, set_value_344 Potentialmeter sensor at pin0, set_value_528 Potentialmeter sensor at pin0",100.0

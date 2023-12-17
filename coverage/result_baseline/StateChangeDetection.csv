@@ -1,0 +1,11 @@
+filename,ui_length,trial_limit,seed,trials_needed,max_coverage,time_taken,genotype,phenotype
+StateChangeDetection.py,3,500,0,8,100.0,0.9226300716400146,"[[583, 1834], [373, 329], [1310, 2004]]","press BTN at pin2, unpress BTN at pin2, None do_nothing"
+StateChangeDetection.py,3,500,1,14,100.0,1.243302822113037,"[[1447, 1880], [1102, 23], [1571, 529]]","press BTN at pin2, None do_nothing, unpress BTN at pin2"
+StateChangeDetection.py,3,500,2,5,100.0,0.7119760513305664,"[[967, 944], [97, 723], [1331, 711]]","press BTN at pin2, unpress BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,500,3,2,100.0,0.15770649909973145,"[[1921, 1062], [959, 785], [1926, 1951]]","press BTN at pin2, unpress BTN at pin2, None do_nothing"
+StateChangeDetection.py,3,500,4,2,100.0,0.15363502502441406,"[[369, 272], [81, 1644], [1185, 241]]","press BTN at pin2, press BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,500,5,10,100.0,0.5919346809387207,"[[1253, 1969], [1293, 756], [1971, 1935]]","unpress BTN at pin2, press BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,500,6,4,100.0,0.2830832004547119,"[[1739, 1374], [381, 1483], [1679, 1025]]","press BTN at pin2, unpress BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,500,7,4,100.0,0.26196932792663574,"[[507, 914], [253, 1624], [203, 905]]","press BTN at pin2, press BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,500,8,13,100.0,0.8236567974090576,"[[1734, 1043], [1543, 1222], [1707, 717]]","None do_nothing, press BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,500,9,6,100.0,0.40161681175231934,"[[859, 1624], [1151, 1399], [176, 817]]","press BTN at pin2, unpress BTN at pin2, None do_nothing"

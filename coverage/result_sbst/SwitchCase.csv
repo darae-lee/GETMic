@@ -1,0 +1,11 @@
+filename,ui_length,pp_size,seed,generations,time_taken,genotype,phenotype,coverage
+SwitchCase.py,3,10,0,2,0.2366759777069091,"[(999, 1332), (1933, 412), (1449, 1778)]","set_value_308 Photoresistor sensor at pin0, set_value_412 Photoresistor sensor at pin0, set_value_754 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,1,16,1.1626062393188477,"[(1697, 708), (1503, 1534), (1803, 1228)]","set_value_708 Photoresistor sensor at pin0, set_value_510 Photoresistor sensor at pin0, set_value_204 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,2,19,1.41752290725708,"[(139, 1566), (1639, 209), (2009, 798)]","set_value_542 Photoresistor sensor at pin0, set_value_209 Photoresistor sensor at pin0, set_value_798 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,3,8,0.6740643978118896,"[(461, 459), (959, 785), (1409, 272)]","set_value_459 Photoresistor sensor at pin0, set_value_785 Photoresistor sensor at pin0, set_value_272 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,4,1,0.1392135620117187,"[(909, 1475), (1195, 1276), (799, 1695)]","set_value_451 Photoresistor sensor at pin0, set_value_252 Photoresistor sensor at pin0, set_value_671 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,5,7,0.6134035587310791,"[(679, 681), (1905, 1438), (131, 1410)]","set_value_681 Photoresistor sensor at pin0, set_value_414 Photoresistor sensor at pin0, set_value_386 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,6,0,0.0711205005645752,"[(773, 692), (69, 1363), (1253, 1534)]","set_value_692 Photoresistor sensor at pin0, set_value_339 Photoresistor sensor at pin0, set_value_510 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,7,1,0.1450552940368652,"[(1263, 740), (1891, 1455), (1525, 399)]","set_value_740 Photoresistor sensor at pin0, set_value_431 Photoresistor sensor at pin0, set_value_399 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,8,4,0.3229351043701172,"[(723, 1380), (343, 562), (2027, 787)]","set_value_356 Photoresistor sensor at pin0, set_value_562 Photoresistor sensor at pin0, set_value_787 Photoresistor sensor at pin0",100.0
+SwitchCase.py,3,10,9,2,0.2207977771759033,"[(859, 1624), (1151, 1399), (167, 1552)]","set_value_600 Photoresistor sensor at pin0, set_value_375 Photoresistor sensor at pin0, set_value_528 Photoresistor sensor at pin0",100.0

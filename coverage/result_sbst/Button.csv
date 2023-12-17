@@ -1,0 +1,11 @@
+filename,ui_length,pp_size,seed,generations,time_taken,genotype,phenotype,coverage
+Button.py,3,10,0,0,0.0150096416473388,"[(1577, 1722), (165, 1060), (1990, 1658)]","press BTN at pin2, press BTN at pin2, None do_nothing",100.0
+Button.py,3,10,1,0,0.0210165977478027,"[(1934, 1554), (859, 384), (1998, 116)]","None do_nothing, press BTN at pin2, None do_nothing",100.0
+Button.py,3,10,2,0,0.0103321075439453,"[(231, 375), (347, 1478), (692, 1262)]","unpress BTN at pin2, press BTN at pin2, None do_nothing",100.0
+Button.py,3,10,3,0,0.0260634422302246,"[(1921, 1062), (959, 785), (1926, 1951)]","press BTN at pin2, unpress BTN at pin2, None do_nothing",100.0
+Button.py,3,10,4,0,0.0167272090911865,"[(966, 1242), (422, 1622), (1961, 634)]","None do_nothing, None do_nothing, press BTN at pin2",100.0
+Button.py,3,10,5,0,0.0227522850036621,"[(417, 1021), (53, 887), (1671, 1144)]","unpress BTN at pin2, unpress BTN at pin2, press BTN at pin2",100.0
+Button.py,3,10,6,0,0.0124034881591796,"[(330, 1986), (1071, 150), (1, 596)]","None do_nothing, press BTN at pin2, press BTN at pin2",100.0
+Button.py,3,10,7,0,0.0277655124664306,"[(507, 914), (253, 1624), (203, 905)]","press BTN at pin2, press BTN at pin2, unpress BTN at pin2",100.0
+Button.py,3,10,8,0,0.0192821025848388,"[(348, 560), (1013, 857), (1641, 124)]","None do_nothing, unpress BTN at pin2, press BTN at pin2",100.0
+Button.py,3,10,9,0,0.0180385112762451,"[(1385, 1899), (331, 1368), (167, 1552)]","unpress BTN at pin2, press BTN at pin2, press BTN at pin2",100.0

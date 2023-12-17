@@ -20,4 +20,4 @@ for ((i=0; i<10;i++));
     python sbst/main.py ComplexButton.py --p 10 --l 10 --r $i
  done
 
-echo "Done calculating GE coverage!"
+echo "Done generating GE test case!"

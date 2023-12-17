@@ -1,0 +1,11 @@
+filename,ui_length,trial_limit,seed,trials_needed,max_coverage,time_taken,genotype,phenotype
+SegmentDisplay.py,3,500,0,8,100.0,0.9567153453826904,"[[583, 1834], [373, 329], [1310, 2004]]","press BTN at pin13, unpress BTN at pin13, None do_nothing"
+SegmentDisplay.py,3,500,1,14,100.0,1.970046043395996,"[[1447, 1880], [1102, 23], [1571, 529]]","press BTN at pin13, None do_nothing, unpress BTN at pin13"
+SegmentDisplay.py,3,500,2,5,100.0,0.7431764602661133,"[[967, 944], [97, 723], [1331, 711]]","press BTN at pin13, unpress BTN at pin13, unpress BTN at pin13"
+SegmentDisplay.py,3,500,3,2,100.0,0.20226001739501953,"[[1921, 1062], [959, 785], [1926, 1951]]","press BTN at pin13, unpress BTN at pin13, None do_nothing"
+SegmentDisplay.py,3,500,4,2,100.0,0.2253437042236328,"[[369, 272], [81, 1644], [1185, 241]]","press BTN at pin13, press BTN at pin13, unpress BTN at pin13"
+SegmentDisplay.py,3,500,5,10,100.0,0.9123680591583252,"[[1253, 1969], [1293, 756], [1971, 1935]]","unpress BTN at pin13, press BTN at pin13, unpress BTN at pin13"
+SegmentDisplay.py,3,500,6,4,100.0,0.45613765716552734,"[[1739, 1374], [381, 1483], [1679, 1025]]","press BTN at pin13, unpress BTN at pin13, unpress BTN at pin13"
+SegmentDisplay.py,3,500,7,4,100.0,0.32266902923583984,"[[507, 914], [253, 1624], [203, 905]]","press BTN at pin13, press BTN at pin13, unpress BTN at pin13"
+SegmentDisplay.py,3,500,8,13,100.0,1.0832653045654297,"[[1734, 1043], [1543, 1222], [1707, 717]]","None do_nothing, press BTN at pin13, unpress BTN at pin13"
+SegmentDisplay.py,3,500,9,6,100.0,0.49239659309387207,"[[859, 1624], [1151, 1399], [176, 817]]","press BTN at pin13, unpress BTN at pin13, None do_nothing"
