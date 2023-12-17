@@ -38,11 +38,14 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
     elif filename == "ButtonCounter.py":
         from converted_codes import ButtonCounter
         exec_code = ButtonCounter.exec_code
+    elif filename == "ComplexButton.py":
+        from converted_codes import ComplexButton
+        exec_code = ComplexButton.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code
 
-    cov = coverage.Coverage()
+    cov = coverage.Coverage(branch=True)
 
     target_coverage = 100.0
     curr_coverage = 0
@@ -52,7 +55,7 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
     # Keep testing until the coverage reaches 100%
     max_coverage = 0
     while curr_coverage < target_coverage and trials < trial_limit:
-        cov.start()  # Start measuring coverage
+        cov.start()  # Start measuring coverage // 32, 4 => 28/31
         random_interaction_seq = [[random.randint(0, 2048), random.randint(0, 2048)] for _ in range(ui_length)]
         exec_code(random_interaction_seq)
         cov.stop()  # Stop measuring coverage
@@ -72,6 +75,12 @@ def calculate_coverage(filename="Button.py", ui_length=10, trial_limit=1000):
         # print(summary)
         curr_coverage = min((int(summary["covered_lines"]) + 1) / int(summary['num_statements']) * 100, 100)
         # os.remove("coverage/report.json")
+        cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
+
+        if int(curr_coverage) == 90: 
+            print(curr_coverage)
+            print(summary)
+            cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection
 
         print(f"Trial {trials}: {curr_coverage}%")
         # cov.html_report(directory=f"coverage/html_{curr_coverage}")  # for inspection

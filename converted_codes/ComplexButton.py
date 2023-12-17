@@ -76,5 +76,5 @@ def exec_code(random_interaction_seq: list):
             for j in range(len(pins) - 1):
                 pins[j].value(digits[7][j])
         utime.sleep(1/1000)
-                if not interactor.is_alive():  # pragma: no cover
+        if not interactor.is_alive():  # pragma: no cover
             break

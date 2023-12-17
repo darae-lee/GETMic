@@ -16,10 +16,8 @@ for ((i=0; i<10;i++));
 #    python ga/sbst.py SwitchCase.py --p 10 --l 3 --r $i
 #    python ga/sbst.py LoveOMeter.py --p 10 --l 3 --r $i
 #    python ga/sbst.py SegmentDisplay.py --p 10 --l 3 --r $i
-    python ga/sbst.py WarmButton.py --p 10 --l 12 --r $i
+    # python ga/sbst.py WarmButton.py --p 10 --l 12 --r $i
+    python ga/sbst.py ComplexButton.py --p 10 --l 10 --r $i
  done
-
-# python ga/sbst.py WarmButton.py --p 20 --l 20 --r 0
-# python ga/sbst.py ButtonCounter.py --p 20 --l 20 --r 0
 
 echo "Done calculating GA coverage!"
