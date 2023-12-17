@@ -49,6 +49,11 @@ def load_board(path_name):
         btn = simulator.Button(HW_board.vcc, HW_board.pins[2], HW_board)
         masterbtn = simulator.Button(HW_board.vcc, HW_board.pins[3], HW_board)
         led = simulator.LED(HW_board.gnd, HW_board.pins[13])
+    elif name == 'ComplexButton.py':
+        for i in range(3):
+            btn = simulator.Button(HW_board.vcc, HW_board.pins[10+i], HW_board)
+        for i in range(2, 9, 1):
+            led = simulator.LED(HW_board.gnd, HW_board.pins[i])
 
 
 class UserInteract(threading.Thread):

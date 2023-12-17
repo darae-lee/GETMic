@@ -236,6 +236,9 @@ def calculate_coverage(filename, solution):
     elif filename == "ButtonCounter.py":
         from converted_codes import ButtonCounter
         exec_code = ButtonCounter.exec_code
+    elif filename == "ComplexButton.py":
+        from converted_codes import ComplexButton
+        exec_code = ComplexButton.exec_code
     else:  # Defualt: button
         from converted_codes import Button
         exec_code = Button.exec_code
