@@ -15,5 +15,6 @@ python coverage/sbst.py SwitchCase.py
 python coverage/sbst.py LoveOMeter.py
 python coverage/sbst.py SegmentDisplay.py
 python coverage/sbst.py WarmButton.py
+python coverage/sbst.py ComplexButton.py
 
 echo "Done calculating baseline coverage!"
