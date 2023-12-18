@@ -1,0 +1,11 @@
+filename,ui_length,pp_size,seed,generations,time_taken,genotype,phenotype
+StateChangeDetection.py,3,10,0,0,0.053289175033569336,"[(583, 1834), (373, 329), (1310, 2004)]","press BTN at pin2, unpress BTN at pin2, None do_nothing"
+StateChangeDetection.py,3,10,1,1,0.13788533210754395,"[(495, 1362), (125, 91), (104, 37)]","press BTN at pin2, unpress BTN at pin2, None do_nothing"
+StateChangeDetection.py,3,10,2,0,0.037444353103637695,"[(967, 944), (97, 723), (1331, 711)]","press BTN at pin2, unpress BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,10,3,0,0.025090694427490234,"[(1921, 1062), (959, 785), (1926, 1951)]","press BTN at pin2, unpress BTN at pin2, None do_nothing"
+StateChangeDetection.py,3,10,4,0,0.024156570434570312,"[(369, 272), (81, 1644), (1185, 241)]","press BTN at pin2, press BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,10,5,6,0.48445606231689453,"[(873, 178), (53, 887), (1671, 1144)]","press BTN at pin2, unpress BTN at pin2, press BTN at pin2"
+StateChangeDetection.py,3,10,6,0,0.029810428619384766,"[(1739, 1374), (381, 1483), (1679, 1025)]","press BTN at pin2, unpress BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,10,7,0,0.028081655502319336,"[(507, 914), (253, 1624), (203, 905)]","press BTN at pin2, press BTN at pin2, unpress BTN at pin2"
+StateChangeDetection.py,3,10,8,1,0.13450956344604492,"[(1649, 366), (1545, 441), (237, 1386)]","press BTN at pin2, unpress BTN at pin2, press BTN at pin2"
+StateChangeDetection.py,3,10,9,0,0.047425270080566406,"[(859, 1624), (1151, 1399), (176, 817)]","press BTN at pin2, unpress BTN at pin2, None do_nothing"
