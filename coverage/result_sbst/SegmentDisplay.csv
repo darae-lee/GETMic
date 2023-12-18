@@ -1,11 +1,11 @@
 filename,ui_length,pp_size,seed,generations,time_taken,genotype,phenotype,coverage
-SegmentDisplay.py,3,10,0,0,0.1260523796081543,"[(583, 1834), (373, 329), (1310, 2004)]","press BTN at pin13, unpress BTN at pin13, None do_nothing",100.0
-SegmentDisplay.py,3,10,1,1,0.3049235343933105,"[(495, 1362), (125, 91), (104, 37)]","press BTN at pin13, unpress BTN at pin13, None do_nothing",100.0
-SegmentDisplay.py,3,10,2,0,0.0903551578521728,"[(967, 944), (97, 723), (1331, 711)]","press BTN at pin13, unpress BTN at pin13, unpress BTN at pin13",100.0
-SegmentDisplay.py,3,10,3,0,0.0455720424652099,"[(1921, 1062), (959, 785), (1926, 1951)]","press BTN at pin13, unpress BTN at pin13, None do_nothing",100.0
-SegmentDisplay.py,3,10,4,0,0.0498249530792236,"[(369, 272), (81, 1644), (1185, 241)]","press BTN at pin13, press BTN at pin13, unpress BTN at pin13",100.0
-SegmentDisplay.py,3,10,5,0,0.1380696296691894,"[(1253, 1969), (1293, 756), (1971, 1935)]","unpress BTN at pin13, press BTN at pin13, unpress BTN at pin13",100.0
-SegmentDisplay.py,3,10,6,0,0.0713744163513183,"[(1739, 1374), (381, 1483), (1679, 1025)]","press BTN at pin13, unpress BTN at pin13, unpress BTN at pin13",100.0
-SegmentDisplay.py,3,10,7,0,0.0679264068603515,"[(507, 914), (253, 1624), (203, 905)]","press BTN at pin13, press BTN at pin13, unpress BTN at pin13",100.0
-SegmentDisplay.py,3,10,8,1,0.3248505592346191,"[(1649, 366), (1545, 441), (237, 1386)]","press BTN at pin13, unpress BTN at pin13, press BTN at pin13",100.0
-SegmentDisplay.py,3,10,9,0,0.1077332496643066,"[(859, 1624), (1151, 1399), (176, 817)]","press BTN at pin13, unpress BTN at pin13, None do_nothing",100.0
+SegmentDisplay.py,3,10,0,0,0.32576942443847656,"[(583, 1834), (373, 329), (1310, 2004)]","press BTN at pin13, unpress BTN at pin13, None do_nothing",100.0
+SegmentDisplay.py,3,10,1,1,0.3701066970825195,"[(495, 1362), (125, 91), (104, 37)]","press BTN at pin13, unpress BTN at pin13, None do_nothing",100.0
+SegmentDisplay.py,3,10,2,0,0.1772546768188476,"[(967, 944), (97, 723), (1331, 711)]","press BTN at pin13, unpress BTN at pin13, unpress BTN at pin13",100.0
+SegmentDisplay.py,3,10,3,0,0.1263952255249023,"[(1921, 1062), (959, 785), (1926, 1951)]","press BTN at pin13, unpress BTN at pin13, None do_nothing",100.0
+SegmentDisplay.py,3,10,4,0,0.16287159919738767,"[(369, 272), (81, 1644), (1185, 241)]","press BTN at pin13, press BTN at pin13, unpress BTN at pin13",100.0
+SegmentDisplay.py,3,10,5,0,0.23978900909423823,"[(1253, 1969), (1293, 756), (1971, 1935)]","unpress BTN at pin13, press BTN at pin13, unpress BTN at pin13",100.0
+SegmentDisplay.py,3,10,6,0,0.17379355430603022,"[(1739, 1374), (381, 1483), (1679, 1025)]","press BTN at pin13, unpress BTN at pin13, unpress BTN at pin13",100.0
+SegmentDisplay.py,3,10,7,0,0.155771255493164,"[(507, 914), (253, 1624), (203, 905)]","press BTN at pin13, press BTN at pin13, unpress BTN at pin13",100.0
+SegmentDisplay.py,3,10,8,1,0.40930008888244623,"[(1649, 366), (1545, 441), (237, 1386)]","press BTN at pin13, unpress BTN at pin13, press BTN at pin13",100.0
+SegmentDisplay.py,3,10,9,0,0.18096852302551264,"[(859, 1624), (1151, 1399), (176, 817)]","press BTN at pin13, unpress BTN at pin13, None do_nothing",100.0

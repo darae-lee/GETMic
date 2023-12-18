@@ -6,6 +6,7 @@ import json
 import pandas as pd
 import platform
 import ast
+import time
 
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(os.path.join(root_dir, 'simulator'))
@@ -87,6 +88,11 @@ if __name__ == "__main__":
     df = pd.read_csv(input_filename)
 
     df['genotype'] = df['genotype'].apply(lambda x: ast.literal_eval(x))
-    df['coverage'] = df['genotype'].apply(lambda x: calculate_coverage(args.filename, x))
+    
+    for index, row in df.iterrows():
+        start_time = time.time()
+        df.at[index, 'coverage'] = calculate_coverage(args.filename, row['genotype'])
+        end_time = time.time()
+        df.at[index, 'time_taken'] += end_time - start_time
 
     df.to_csv(output_filename, index=False)
