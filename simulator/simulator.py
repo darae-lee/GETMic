@@ -174,9 +174,9 @@ class TemperatureSensor(AnalogComponent):
     def __str__(self):
         return f"Temperature sensor at {self.name}"
     
-class Potentialmeter(AnalogComponent):
+class Potentiometer(AnalogComponent):
     def __str__(self) -> str:
-        return f"Potentialmeter sensor at {self.name}"
+        return f"Potentiometer sensor at {self.name}"
 
 class Photoresistor(AnalogComponent):
     def __str__(self) -> str:
